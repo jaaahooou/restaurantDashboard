@@ -9,11 +9,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username','first_name','email']
 
 
+
 class DishCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = DishCategory
-        fields = ['title']
+        fields = ['id','title']
 
+
+class DishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dish 
+        fields = ['category','title', 'price','countInStock']
 
 
 class RoomSerializer(serializers.ModelSerializer):

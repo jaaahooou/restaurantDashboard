@@ -1,6 +1,6 @@
 from rest_framework import permissions
-from .models import Room, Table, DishCategory, Dish, Order, OrderDish, ShippingAddress
-from .serializers import User,UserSerializer, RoomSerializer, TableSerializer
+from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish, ShippingAddress
+from mainapp.serializers import User,UserSerializer, RoomSerializer, TableSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from django.contrib.auth.hashers import make_password
@@ -8,7 +8,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
@@ -22,25 +21,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
-
-# Add dish category (only admin) 
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def createDishCategory(request):
-    try:
-        data = request.data 
-        dishCategory = DishCategory.objects.create(
-            title = data['title']
-        )
-        serializer = DishCategorySerializer(dishCategory, many=False)
-        return (serializer.data)
-    except:
-        message = {"Error" : "This category already exist"}
-        return Response(message, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
@@ -77,24 +57,3 @@ def getUserById(request,pk):
     user = User.objects.get(id=pk)
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
-
-
-
-
-# Remove dish category (only admin)
-
-# Add new dish to menu (only admin)
-# Delete a dish from menu (only admin)
-
-# Add dish to order (authenticated)
-# Add order (authenticated)
-
-# Add Rooms (Admin only)
-# Add Tables (Admin only)
-
-# Add Shipping Addres (auth)
-
-# Get Orders (auth)
-# Get dishes (auth)
-
-
