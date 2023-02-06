@@ -13,21 +13,43 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def createOrder(request,pk):
+    data = request.data
+    user = request.user
+    # get table for order, each order is assigned to table
+    table = Table.objects.get(id=pk)
+    if table.isOccupied == False:
+                  
+        order = Order.objects.create(
+            user = request.user,
+            table = table
+            
+        )
+        
+    else:
+        return Response('Table is occupied')
+    print(user)
+    #swicth table.isOccupied to True, no one else can make an order assigned this table
+    table.isOccupied = True
+    table.save()
+    print(table.isOccupied)
+    serializer = OrderSerializer(order, many=False)
+    return Response(serializer.data)
+    
+
+#update order only for assigned user
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateOrder(request):
+    pass
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addDishToOrder(request):
     data=request.data 
     user = request.user
     print(user)
-
-    orderedDish = data['orderedDish']
-
-    order = Order.objects.create(
-        user=user,
-        paymentMethod =data['paymenMethod'],
-        totalPrice = data['totalPrice']
-
-    )
-
-
 
     return Response('Hej ho')
 
@@ -35,7 +57,7 @@ def addDishToOrder(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getOrders(response):
+def getOrders(request):
     orders = Order.objects.all()
     print(str(orders[0].table.room))
     serializer= OrderSerializer(orders, many=True)

@@ -47,7 +47,7 @@ def deleteDishCategory(request,pk):
     categoryToRemove.delete()
     return Response("Category removed")
 
-# Add dish o menu (only admin)
+# Add dish To menu (only admin)
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def addDishToMenu(request):
@@ -83,9 +83,13 @@ def deleteDishFromMenu(request, pk):
         
         
 
+# update order, also for add dish to order
 
-
-
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateOrder(request,pk):
+    order = Order.objects.get(id=pk)
+    
+    return
 
    
