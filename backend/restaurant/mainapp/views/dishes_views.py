@@ -83,11 +83,13 @@ def deleteDishFromMenu(request, pk):
         
         
 
-# add dish to order
+# update order, also for add dish to order
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def addDishToOrder(request):
-    pass
+def updateOrder(request,pk):
+    order = Order.objects.get(id=pk)
+    
+    return
 
    
