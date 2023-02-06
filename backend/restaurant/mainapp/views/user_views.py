@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish, ShippingAddress
+from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
 from mainapp.serializers import User,UserSerializer, RoomSerializer, TableSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
@@ -53,7 +53,21 @@ def createUser(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser])
 def getUserById(request,pk):
     user = User.objects.get(id=pk)
     serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteUser(request,pk):
+    userToDelete = User.objects.get(id=pk)
+    if userToDelete.is_superuser:
+        return Response("Cannot remove Admin user")
+    print(userToDelete.is_superuser)
+    userToDelete.delete()
+    return Response('User removed from system')

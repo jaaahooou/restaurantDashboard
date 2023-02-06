@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish, ShippingAddress
+from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
 from mainapp.serializers import User,UserSerializer, DishCategorySerializer, DishSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
@@ -47,16 +47,17 @@ def deleteDishCategory(request,pk):
     categoryToRemove.delete()
     return Response("Category removed")
 
-
+# Add dish o menu (only admin)
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def addDishToMenu(request):
     data = request.data
     dishTitle = data['title']
     dishCategory = data['category']
-   
+   #check if dish category exist
     if DishCategory.objects.filter(title=str(dishCategory)).count()<=0:
         return Response("Category doesn`t exist")
+        #chack if dish exist
     elif DishCategory.objects.filter(title=str(dishCategory)).count()>0:
         if Dish.objects.filter(title=str(dishTitle)).count()>0:
             return Response("This dish already exist")
@@ -70,6 +71,14 @@ def addDishToMenu(request):
         )
         serializer = DishSerializer(dishToAdd, many=False)
         return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteDishFromMenu(request, pk):
+    dishToRemove = Dish.objects.get(id=pk)
+    dishToRemove.delete()
+    return Response("Dish removed")
 
         
         

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Room, Table, DishCategory, Dish, Order, OrderDish, ShippingAddress
+from .models import Room, Table, DishCategory, Dish, Order, OrderDish
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -32,3 +32,19 @@ class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = '__all__'
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = [
+        'id', 
+        'user',
+        "table", 
+        "paymentMethod",
+        'shipping', 
+        "isPaid", 
+        "createdAt", 
+        "isDone", 
+        "isBrought",
+        "tip"]

@@ -12,5 +12,6 @@ urlpatterns=[
     path('create/', views.createUser, name='create'),
 
     path('users/<str:pk>/', views.getUserById, name='user'),
+    path('remove/<str:pk>/', views.deleteUser, name='delete-user'),
     
 ]
