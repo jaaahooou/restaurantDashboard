@@ -7,11 +7,13 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 function App() {
+  const { collapseSidebar } = useProSidebar();
+
   return (
-    <div className="App">
-      <div>MY app</div>
+    <div id="App" style={({ height: "100vh" }, { display: "flex" })}>
+      <Sidebar style={{ height: "100vh" }}></Sidebar>
     </div>
   );
 }
-
+// https://blog.logrocket.com/create-sidebar-react-pro-sidebar-mui/
 export default App;
