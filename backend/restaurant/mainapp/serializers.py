@@ -19,7 +19,7 @@ class DishCategorySerializer(serializers.ModelSerializer):
 class DishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dish 
-        fields = ['category','title', 'price','countInStock']
+        fields = ['id','category','title', 'price','countInStock']
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -48,3 +48,8 @@ class OrderSerializer(serializers.ModelSerializer):
         "isDone", 
         "isBrought",
         "tip"]
+
+class OrderDishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= OrderDish
+        fields= ['id','order_id', 'dish', 'qty']

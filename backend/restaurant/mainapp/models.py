@@ -12,6 +12,7 @@ class Room(models.Model):
 
 
 class Table(models.Model):
+    
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     tableNumber = models.IntegerField(null=False, blank=False)
     numberOfPersons = models.IntegerField(null=False, blank=False, default =2)
@@ -47,7 +48,7 @@ class Order(models.Model):
         (CASH, "Cash")
     ]
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    table = models.ForeignKey(Table,on_delete=models.SET_NULL, null=True, blank = True)
+    table = models.OneToOneField(Table,on_delete=models.CASCADE, null=True, blank = True)
     paymentMethod = models.CharField(max_length=10, choices=PAYMENT_CHOICES, default=CASH)
     shipping = models.BooleanField(default= False)
     isPaid = models.BooleanField(default= False)

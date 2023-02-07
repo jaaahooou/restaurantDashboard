@@ -10,6 +10,18 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
+
+# get all dishes from menu
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAllDishes(request):
+    dishes = Dish.objects.all()
+    serializer = DishSerializer(dishes, many=True)
+    
+    return Response(serializer.data)
+
+
 # Add dish category (only admin) 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
@@ -47,6 +59,8 @@ def deleteDishCategory(request,pk):
     categoryToRemove.delete()
     return Response("Category removed")
 
+
+
 # Add dish To menu (only admin)
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
@@ -72,7 +86,7 @@ def addDishToMenu(request):
         serializer = DishSerializer(dishToAdd, many=False)
         return Response(serializer.data)
 
-
+# delete dish from menu
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])
 def deleteDishFromMenu(request, pk):
@@ -83,13 +97,5 @@ def deleteDishFromMenu(request, pk):
         
         
 
-# update order, also for add dish to order
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def updateOrder(request,pk):
-    order = Order.objects.get(id=pk)
-    
-    return
 
    
