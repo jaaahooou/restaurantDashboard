@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div id="App" style={({ height: "100vh" }, { display: "flex" })}>
-      <Sidebar style={{ height: "100vh" }}></Sidebar>
+      <Sidebar style={{ height: "100vh" }}>d</Sidebar>
     </div>
   );
 }
