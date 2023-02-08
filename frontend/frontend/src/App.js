@@ -1,18 +1,26 @@
 import MenuSidebar from "./components/MenuSidebar";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
-
+import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import Dashboard from "./screens/dashboard";
+import DishMenu from "./screens/DishMenu";
 
-import { ProSidebarProvider } from "react-pro-sidebar";
 function App() {
   return (
-    <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
-      <MenuSidebar />
-      <main className="content">
-        <ResponsiveAppBar />
-      </main>
-    </div>
+    <Router>
+      <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
+        <MenuSidebar />
+        <main className="content">
+          <ResponsiveAppBar />
+
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dishmenu" element={<DishMenu />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 

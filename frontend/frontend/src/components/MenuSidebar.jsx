@@ -1,13 +1,10 @@
 import React from "react";
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { Link } from "react-router-dom";
 
+import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
@@ -37,7 +34,10 @@ const MenuSidebar = () => {
           >
             <h2>Admin</h2>
           </MenuItem>
-          <MenuItem icon={<RestaurantMenuIcon />}>Menu</MenuItem>
+          <MenuItem href="/dishmenu" icon={<RestaurantMenuIcon />}>
+            Menu
+            {/* <Link to="/dishmenu" /> */}
+          </MenuItem>
           <MenuItem icon={<TableRestaurantIcon />}>Tables</MenuItem>
           <MenuItem icon={<FormatListNumberedIcon />}>Orders</MenuItem>
           <MenuItem icon={<PeopleOutlinedIcon />}>Staff</MenuItem>
