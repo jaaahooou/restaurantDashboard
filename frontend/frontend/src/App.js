@@ -5,6 +5,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Dashboard from "./screens/dashboard";
 import DishMenu from "./screens/DishMenu";
+import Tables from "./screens/Tables";
+import Orders from "./screens/orders/index";
+import Staff from "./screens/staff";
+import Admin from "./screens/admin";
 
 function App() {
   return (
@@ -16,7 +20,13 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Dashboard />} />
+
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dishmenu" element={<DishMenu />} />
+            <Route path="/tables" element={<Tables />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/staff" element={<Staff />} />
+            <Route path="/admin-panel" element={<Admin />} />
           </Routes>
         </main>
       </div>
