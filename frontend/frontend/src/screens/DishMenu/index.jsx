@@ -1,20 +1,8 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { experimentalStyled as styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-
 import Grid from "@mui/material/Grid";
-import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import SendIcon from "@mui/icons-material/Send";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -23,19 +11,20 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
+import axios from "axios";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
 
-const categories = [
-  "Salads",
-  "Aperitif",
-  "Soups",
-  "Main dishes",
-  "Beers",
-  "Soft drinks",
-];
+// const categories = [
+//   "Salads",
+//   "Aperitif",
+//   "Soups",
+//   "Main dishes",
+//   "Beers",
+//   "Soft drinks",
+// ];
 
 const rows = [
   createData("Frozen yoghurt", 159),
@@ -54,6 +43,30 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ResponsiveGrid() {
+  const [categories, setCategories] = useState([]);
+  const [dishes, setDishes] = useState([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const { data } = await axios.get(
+        "http://127.0.0.1:8000/dishes/get-categories"
+      );
+      setCategories(data);
+    }
+
+    async function fetchDishes() {
+      const { data } = await axios.get(
+        "http://127.0.0.1:8000/dishes/get-dishes"
+      );
+
+      setDishes(data);
+      console.log(data);
+    }
+
+    fetchCategories();
+    fetchDishes();
+  }, []);
+
   return (
     <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
       <Grid
@@ -61,11 +74,11 @@ export default function ResponsiveGrid() {
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 1, sm: 8, md: 12 }}
       >
-        {Array.from(Array(6)).map((_, index) => (
-          <Grid item xs={1} sm={4} md={4} key={index}>
+        {categories.map((category) => (
+          <Grid item xs={1} sm={4} md={4} key={category.id}>
             <Item>
               <Typography variant="h4" align="left">
-                {categories[index]}
+                {category.title}
               </Typography>
 
               <TableContainer component={Paper}>
@@ -77,17 +90,17 @@ export default function ResponsiveGrid() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {dishes.map((dish) => (
                       <TableRow
-                        key={row.name}
+                        key={dish.id}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
                         <TableCell component="th" scope="row">
-                          {row.name}
+                          {dish.category}
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
+                        <TableCell align="right">{dish.price}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
