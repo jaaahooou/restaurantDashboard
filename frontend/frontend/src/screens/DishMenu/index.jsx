@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
 import axios from "axios";
+import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -68,6 +69,7 @@ export default function ResponsiveGrid() {
   }, []);
 
   return (
+    
     <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
       <Grid
         container
@@ -90,17 +92,21 @@ export default function ResponsiveGrid() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {dishes.map((dish) => (
+                
+                    {dishes.filter(dish=>dish.category===category.id).map((filtereDish) => (
+                
                       <TableRow
-                        key={dish.id}
+                        key={filtereDish.id}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {dish.category}
-                        </TableCell>
-                        <TableCell align="right">{dish.price}</TableCell>
+                      >  
+                                  <TableCell component="th" scope="row">
+                                  {filtereDish.title}
+                                  </TableCell>
+
+                                  <TableCell align="right">{filtereDish.price}</TableCell>
+
                       </TableRow>
                     ))}
                   </TableBody>
