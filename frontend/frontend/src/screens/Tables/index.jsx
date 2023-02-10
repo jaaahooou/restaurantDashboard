@@ -5,6 +5,12 @@ import Stack from '@mui/material/Stack';
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 import axios from "axios";
 
 export default function Tables() {
@@ -80,30 +86,9 @@ export default function Tables() {
    
     </Stack>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column-reverse',
-          alignItems: 'flex-start',
-          p: 1,
-          m: 1,
-          bgcolor: 'background.paper',
-          borderRadius: 1,
-        }}
-      >
-   
-      </Box>
+      
 
-    <Box sx={{ display: 'flex',flexDirection:"row" }} >
- 
-    <Grid
-     container
-     spacing={{ xs: 2, md: 3 }}
-     columns={{ xs: 1, sm: 8, md: 12 }}
-    >
-GRID
-    </Grid>
-    </Box>
+   
     </div>
     
    
