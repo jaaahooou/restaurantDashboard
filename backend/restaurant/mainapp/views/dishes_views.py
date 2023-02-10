@@ -14,7 +14,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 # get all dishes from menu
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getAllDishes(request):
     dishes = Dish.objects.all()
     serializer = DishSerializer(dishes, many=True)
@@ -45,7 +45,7 @@ def createDishCategory(request):
 
 # Get dish categories (auth) 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getDishCategories(request):
     dishCategories = DishCategory.objects.all()
     serializer = DishCategorySerializer(dishCategories, many=True)

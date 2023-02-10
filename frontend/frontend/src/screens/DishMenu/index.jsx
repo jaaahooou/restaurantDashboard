@@ -12,28 +12,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
 import axios from "axios";
-import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-// const categories = [
-//   "Salads",
-//   "Aperitif",
-//   "Soups",
-//   "Main dishes",
-//   "Beers",
-//   "Soft drinks",
-// ];
 
-const rows = [
-  createData("Frozen yoghurt", 159),
-  createData("Ice cream sandwich", 250),
-  createData("Eclair", 262),
-  createData("Cupcake", 305),
-  createData("Gingerbread", 250),
-];
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",

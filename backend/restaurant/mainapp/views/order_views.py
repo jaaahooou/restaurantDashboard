@@ -12,7 +12,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 #create order 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def createOrder(request,pk):
     data = request.data
     user = request.user
@@ -37,7 +37,7 @@ def createOrder(request,pk):
 
 #update order only for assigned user
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def updateOrder(request,pk):
     data= request.data
     order = Order.objects.get(id=pk)
@@ -59,7 +59,7 @@ def updateOrder(request,pk):
 # add dish to order
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def addDishToOrder(request,pk):
     data=request.data 
     user = request.user
@@ -84,7 +84,7 @@ def addDishToOrder(request,pk):
 #remove dish from order
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def removeDishFromOrder(request,pk):
     dishToRemove = OrderDish.objects.get(id=pk)
     dishToRemove.delete()
@@ -94,7 +94,7 @@ def removeDishFromOrder(request,pk):
 # get All orders 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getOrders(request):
     orders = Order.objects.all()
     print(str(orders[0].table.room))
@@ -102,3 +102,10 @@ def getOrders(request):
     return Response(serializer.data)
 
 
+#get all Rooms
+
+@api_view(['GET'])
+def getAllRooms(request):
+    rooms = Room.objects.all()
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
