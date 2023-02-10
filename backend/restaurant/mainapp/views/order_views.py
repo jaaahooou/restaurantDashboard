@@ -109,3 +109,11 @@ def getAllRooms(request):
     rooms = Room.objects.all()
     serializer = RoomSerializer(rooms, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getAllTables(request):
+    tables = Table.objects.all()
+    serializer = TableSerializer(tables, many=True)
+    return Response(serializer.data)
+    
