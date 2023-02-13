@@ -14,15 +14,6 @@ import Typography from "@mui/material/Typography";
 
 import axios from "axios";
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
-
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -71,26 +62,15 @@ export default function Tables() {
   };
 
   return (
-    <div style={{ width: "100%" }}>
+    <div sx={{ maxwidth: 1024 }}>
       <Box
-        sx={{
+        style={{
           display: "flex",
-          flexDirection: "row-reverse",
-          justifyContent: "center",
-          p: 1,
-          m: 1,
-          bgcolor: "background.paper",
-          borderRadius: 1,
+          margin: "20px auto",
+          maxWidth: 1024,
         }}
+        sx={{ flexGrow: 1 }}
       >
-        <Stack direction="row" spacing={4}>
-          {rooms.map((room) => (
-            <Chip key={room.id} label={room.name} onClick={handleClick} />
-          ))}
-        </Stack>
-      </Box>
-
-      <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
@@ -98,14 +78,15 @@ export default function Tables() {
         >
           {tables.map((table) => (
             <Grid item xs={1} sm={4} md={4} key={table.id}>
-              <Item
-                style={
-                  table.isOccupied
-                    ? { backgroundColor: "red" }
-                    : { backgroundColor: "green" }
-                }
-              >
-                <Typography variant="h5" align="left">
+              <Item sx={{ cursor: "pointer" }}>
+                <Typography
+                  variant="h5"
+                  align="left"
+                  style={{
+                    borderBottom: "1px solid grey",
+                    marginBottom: "20px",
+                  }}
+                >
                   Table No: {table.tableNumber}
                 </Typography>
 
@@ -113,15 +94,22 @@ export default function Tables() {
                   .filter((room) => room.id == table.room)
                   .map((filteredRoom) => (
                     <div key={filteredRoom.id}>
-                      <Typography
-                        align="left"
-                        variant="h6"
-                        style={{ borderBottom: "1px solid black" }}
-                      >
+                      <Typography align="left" variant="h6">
                         {filteredRoom.name}
                       </Typography>
+
                       <Typography>
                         Number of persons: {table.numberOfPersons}
+                      </Typography>
+                      <Typography
+                        variant="h6"
+                        style={
+                          table.isOccupied
+                            ? { color: "red" }
+                            : { color: "green" }
+                        }
+                      >
+                        {table.isOccupied ? "Occupied" : "Avaible"}
                       </Typography>
                     </div>
                   ))}

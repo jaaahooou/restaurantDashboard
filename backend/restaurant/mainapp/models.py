@@ -20,7 +20,7 @@ class Table(models.Model):
     
 
     def __str__(self):
-        return str(self.tableNumber)
+        return str(self.room)
 
 class DishCategory(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
