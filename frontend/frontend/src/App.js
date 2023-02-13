@@ -9,6 +9,7 @@ import Tables from "./screens/Tables";
 import Orders from "./screens/orders/index";
 import Staff from "./screens/staff";
 import Admin from "./screens/admin";
+import Order from "./screens/order";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/dishmenu" element={<DishMenu />} />
             <Route path="/tables" element={<Tables />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="orders/order/:id" element={<Order />} />
             <Route path="/staff" element={<Staff />} />
             <Route path="/admin-panel" element={<Admin />} />
           </Routes>

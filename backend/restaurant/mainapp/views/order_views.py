@@ -36,6 +36,15 @@ def createOrder(request,pk):
     
 
 #update order only for assigned user
+@api_view(['GET'])
+def getOrderById(request,pk):
+    order = Order.objects.get(id=pk)
+    serializer= OrderSerializer(order, many=False)
+    return Response(serializer.data)
+
+
+
+#update order only for assigned user
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def updateOrder(request,pk):
@@ -54,6 +63,7 @@ def updateOrder(request,pk):
         return Response("Order updated")
 
     return Response("You have no permission to do that!")
+
 
 
 # add dish to order
@@ -97,7 +107,7 @@ def removeDishFromOrder(request,pk):
 #@permission_classes([IsAuthenticated])
 def getOrders(request):
     orders = Order.objects.all()
-    print(str(orders[0].table.room))
+ 
     serializer= OrderSerializer(orders, many=True)
     return Response(serializer.data)
 
