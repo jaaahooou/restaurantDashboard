@@ -1,6 +1,7 @@
 import * as React from "react";
+import AuthContext from "../../context/AuthContext";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -41,6 +42,7 @@ export default function CustomizedTables() {
   const [tables, setTables] = useState([]);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
+  let { authTokens, logoutUser } = useContext(AuthContext);
 
   useEffect(() => {
     async function fetchRooms() {
@@ -58,8 +60,16 @@ export default function CustomizedTables() {
     }
 
     async function fetchOrders() {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: "Bearer " + String(authTokens.access),
+        },
+      };
+
       const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-orders"
+        "http://127.0.0.1:8000/orders/get-orders",
+        config
       );
       setOrders(data);
     }
@@ -75,6 +85,22 @@ export default function CustomizedTables() {
     fetchOrders();
     fetchUsers();
   }, []);
+
+  let getOrders = async () => {
+    console.log(authTokens);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer " + String(authTokens.access),
+      },
+    };
+    const { data } = axios.get(
+      "http://127.0.0.1:8000/orders/get-orders",
+      config
+    );
+    console.log(data);
+  };
+  getOrders();
 
   return (
     <Box sx={{ margin: "20px" }}>
@@ -92,8 +118,6 @@ export default function CustomizedTables() {
 
           <TableBody>
             {orders.map((order) => (
-              // <Link component={RouterLink} to="/dashboard">
-
               <StyledTableRow key={order.id}>
                 <StyledTableCell component="th" scope="row">
                   {order.table}
@@ -133,7 +157,6 @@ export default function CustomizedTables() {
                   </LinkContainer>
                 </StyledTableCell>
               </StyledTableRow>
-              // </Link>
             ))}
           </TableBody>
         </Table>

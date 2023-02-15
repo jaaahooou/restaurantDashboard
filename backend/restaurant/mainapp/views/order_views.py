@@ -48,11 +48,13 @@ def getOrderById(request,pk):
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def updateOrder(request,pk):
+    print('start')
     data= request.data
+    print(data)
     order = Order.objects.get(id=pk)
     user = request.user
     table = order.table
-
+      
     if user == order.user:
        
         table.isOccupied = data['isOccupied']
@@ -104,7 +106,7 @@ def removeDishFromOrder(request,pk):
 # get All orders 
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getOrders(request):
     orders = Order.objects.all()
  

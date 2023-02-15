@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 
@@ -15,17 +16,20 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import AuthContext from "./../context/AuthContext";
 
 const Item = ({ title, to, icon }) => {
   return (
-    <NavLink style={{ textDecoration: "unset", color: "white" }} to={to}>
+    <Link style={{ textDecoration: "unset", color: "white" }} to={to}>
       {" "}
       <MenuItem icon={icon}>{title}</MenuItem>
-    </NavLink>
+    </Link>
   );
 };
 
 const MenuSidebar = () => {
+  let { user, logoutUser } = useContext(AuthContext);
+
   const { collapseSidebar, toggled, toggleSidebar, collapsed, broken } =
     useProSidebar();
 
@@ -61,7 +65,7 @@ const MenuSidebar = () => {
             }}
             style={{ textAlign: "center" }}
           >
-            <h2>Admin</h2>
+            {user && `Welcome ${user.username}`}
           </MenuItem>
 
           <Stack direction="row" spacing={2}>
@@ -76,7 +80,7 @@ const MenuSidebar = () => {
             />
           </Stack>
 
-          <Item title="Dashboard" icon={<DashboardIcon />} to="/dashboard" />
+          {/* <Item title="Dashboard" icon={<DashboardIcon />} to="/dashboard" /> */}
           <Item title="Menu" icon={<RestaurantMenuIcon />} to="/dishmenu" />
           <Item title="Tables" icon={<TableRestaurantIcon />} to="/tables" />
           <Item title="Orders" icon={<FormatListNumberedIcon />} to="/orders" />
@@ -86,9 +90,13 @@ const MenuSidebar = () => {
             icon={<AdminPanelSettingsIcon />}
             to="/admin-panel"
           />
-
-          <MenuItem icon={<LoginIcon />}>Login</MenuItem>
-          <MenuItem icon={<LogoutIcon />}>Logout</MenuItem>
+          {user ? (
+            <MenuItem onClick={logoutUser} icon={<LogoutIcon />}>
+              Logout
+            </MenuItem>
+          ) : (
+            <Item title="Login" icon={<LoginIcon />} to="/login" />
+          )}
         </Menu>
       </Sidebar>
     </div>

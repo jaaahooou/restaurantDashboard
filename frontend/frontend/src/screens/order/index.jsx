@@ -1,16 +1,31 @@
 import * as React from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+
 import { Box } from "@mui/system";
-import axios from "axios";
-import { useState, useEffect } from "react";
+
+import { styled } from "@mui/material/styles";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 
 const TAX_RATE = 0.07;
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function ccyFormat(num) {
   return `${num.toFixed(2)}`;
@@ -42,20 +57,67 @@ const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 export default function Order() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
-  async function fetchOrders() {
-    const { data } = await axios.get("http://127.0.0.1:8000/orders/get-orders");
-    setOrders(data);
-  }
+  const [isPaid, setIsPaid] = useState(false);
+  const params = useParams();
+  console.log(params);
 
-  async function fetchUsers() {
-    const { data } = await axios.get("http://127.0.0.1:8000/user/users");
-    setUsers(data);
-    console.log(data);
-  }
+  useEffect(() => {
+    async function fetchOrderById() {
+      const { data } = await axios.get(
+        `http://127.0.0.1:8000/orders/get-order/${params.id}`
+      );
+      setOrders(data);
+      console.log(data);
+    }
+
+    async function fetchUsers() {
+      const { data } = await axios.get("http://127.0.0.1:8000/user/users");
+      setUsers(data);
+      console.log(data);
+    }
+
+    fetchOrderById();
+  }, []);
+
+  const setOrderAsPaid = async () => {
+    setIsPaid(!isPaid);
+    const isPaidInfo = {
+      isPaid: isPaid,
+    };
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      `http://127.0.0.1:8000/orders/update-order/1`,
+      isPaidInfo,
+      config
+    );
+  };
+  console.log("Paid: ", isPaid);
+  const updateOrder = () => {};
 
   return (
     <Box sx={{ margin: "20px" }}>
       {" "}
+      <Box>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+          sx={{ marginBottom: "10px" }}
+        >
+          <Item>Payment method :{orders.paymentMethod} </Item>
+          <Item
+            onClick={() => {
+              setOrderAsPaid();
+            }}
+          >
+            {isPaid ? "Is paid" : "Set as paid"}
+          </Item>
+          <Item>Item 3</Item>
+        </Stack>
+      </Box>
       <TableContainer component={Paper}>
         <Table aria-label="spanning table">
           <TableHead>
