@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import { Link } from "react-router-dom";
 
@@ -17,6 +19,13 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AuthContext from "./../context/AuthContext";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 
 const Item = ({ title, to, icon }) => {
   return (
@@ -48,13 +57,16 @@ const MenuSidebar = () => {
   };
 
   return (
+    <ThemeProvider theme={darkTheme}>
+    <CssBaseline /> 
+
     <div id="App" style={({ height: "100vh" }, { display: "flex" })}>
       <Sidebar
         breakPoint="md"
         transitionDuration={800}
-        style={{ height: "100vh", color: "white" }}
-        backgroundColor="rgb(38, 104, 103)"
-        rtl={false}
+        style={{ height: "100vh"}}
+        
+       
       >
         <Menu>
           <MenuItem
@@ -100,6 +112,7 @@ const MenuSidebar = () => {
         </Menu>
       </Sidebar>
     </div>
+    </ThemeProvider>
   );
 };
 

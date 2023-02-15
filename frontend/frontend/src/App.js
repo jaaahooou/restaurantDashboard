@@ -1,6 +1,8 @@
 import React from "react";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import Dashboard from "./screens/dashboard";
 import DishMenu from "./screens/DishMenu";
@@ -15,8 +17,18 @@ import PrivateRoutes from "./utils/PrivateRoute";
 import MenuSidebar from "./components/MenuSidebar";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+
 function App() {
   return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
     <Router>
        <AuthProvider>
       <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
@@ -44,6 +56,7 @@ function App() {
       </div>
         </AuthProvider>
     </Router>
+    </ThemeProvider>
   );
 }
 
