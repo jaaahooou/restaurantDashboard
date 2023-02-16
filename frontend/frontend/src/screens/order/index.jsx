@@ -21,6 +21,8 @@ import { styled } from "@mui/material/styles";
 
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import DishContext from "../../context/DishContext";
+import OrderDishContext from "../../context/OrderDishContext";
 
 const TAX_RATE = 0.07;
 
@@ -64,20 +66,28 @@ export default function Order() {
   
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
-
+  let {orderDish} = useContext(OrderDishContext)
   let {orderById,getOrderById} = useContext(OrderContext)
   const params = useParams();
+  
 
-function getDishesForOder(){
-  console.log("Dishes for order")
+function getDishesForOder(orderById){
+ 
+  let orderedDishes = orderDish.filter(orderedDish=>orderDish.order == orderById.id)
+ console.log("Filtered: ",orderedDishes)
+
+  
+ 
+
 }
   
 
   useEffect(() => {
     getOrderById(params)
-    getDishesForOder()
+    getDishesForOder(orderById)
   }, []);
 
+ 
 
 
   const setOrderAsPaid = async () => {

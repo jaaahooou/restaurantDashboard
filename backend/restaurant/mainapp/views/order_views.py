@@ -106,7 +106,7 @@ def removeDishFromOrder(request,pk):
 # get All orders 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getOrders(request):
     orders = Order.objects.all()
  
