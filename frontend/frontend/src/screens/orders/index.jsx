@@ -1,5 +1,6 @@
 import * as React from "react";
 import AuthContext from "../../context/AuthContext";
+import OrderContext from "../../context/OrderContext";
 
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
@@ -40,9 +41,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function CustomizedTables() {
   const [rooms, setRooms] = useState([]);
   const [tables, setTables] = useState([]);
-  const [orders, setOrders] = useState([]);
+  // const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   let { authTokens, logoutUser } = useContext(AuthContext);
+  let { orders, getOrders } = useContext(OrderContext);
+  console.log("Orders: ", orders);
 
   useEffect(() => {
     async function fetchRooms() {
@@ -59,20 +62,20 @@ export default function CustomizedTables() {
       setTables(data);
     }
 
-    async function fetchOrders() {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: "Bearer " + String(authTokens.access),
-        },
-      };
+    // async function fetchOrders() {
+    //   const config = {
+    //     headers: {
+    //       "Content-type": "application/json",
+    //       Authorization: "Bearer " + String(authTokens.access),
+    //     },
+    //   };
 
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-orders",
-        config
-      );
-      setOrders(data);
-    }
+    //   const { data } = await axios.get(
+    //     "http://127.0.0.1:8000/orders/get-orders",
+    //     config
+    //   );
+    //   setOrders(data);
+    // }
 
     async function fetchUsers() {
       const { data } = await axios.get("http://127.0.0.1:8000/user/users");
@@ -82,25 +85,25 @@ export default function CustomizedTables() {
 
     fetchTables();
     fetchRooms();
-    fetchOrders();
+    // fetchOrders();
     fetchUsers();
   }, []);
 
-  let getOrders = async () => {
-    console.log(authTokens);
-    const config = {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + String(authTokens.access),
-      },
-    };
-    const { data } = axios.get(
-      "http://127.0.0.1:8000/orders/get-orders",
-      config
-    );
-    console.log(data);
-  };
-  getOrders();
+  // let getOrders = async () => {
+  //   console.log(authTokens);
+  //   const config = {
+  //     headers: {
+  //       "Content-type": "application/json",
+  //       Authorization: "Bearer " + String(authTokens.access),
+  //     },
+  //   };
+  //   const { data } = axios.get(
+  //     "http://127.0.0.1:8000/orders/get-orders",
+  //     config
+  //   );
+  //   console.log(data);
+  // };
+  // getOrders();
 
   return (
     <Box sx={{ margin: "20px" }}>
