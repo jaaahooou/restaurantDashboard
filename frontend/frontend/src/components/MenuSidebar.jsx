@@ -44,17 +44,7 @@ const MenuSidebar = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-  const toggle = () => {
-    toggleSidebar();
-    console.log("dupa");
-    if (toggled) {
-      console.log(true);
-      collapseSidebar();
-    } else {
-      console.log(false);
-      collapseSidebar();
-    }
-  };
+
 
   return (
     <ThemeProvider theme={darkTheme}>

@@ -60,7 +60,7 @@ class Order(models.Model):
    
 
     def __str__(self):
-        return str(self.table)
+        return str(self.id)
 
 
 class OrderDish(models.Model):

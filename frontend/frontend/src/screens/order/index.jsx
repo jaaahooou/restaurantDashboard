@@ -2,6 +2,7 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useContext } from "react";
 
 import OrderContext from "../../context/OrderContext";
 import UserContext from "../../context/UserContext";
@@ -59,26 +60,25 @@ const invoiceTaxes = TAX_RATE * invoiceSubtotal;
 const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
 export default function Order() {
-  const [orders, setOrders] = useState([]);
+ 
+  
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
+
+  let {orderById,getOrderById} = useContext(OrderContext)
   const params = useParams();
 
+function getDishesForOder(){
+  console.log("Dishes for order")
+}
+  
+
   useEffect(() => {
-    async function fetchOrderById() {
-      const { data } = await axios.get(
-        `http://127.0.0.1:8000/orders/get-order/${params.id}`
-      );
-      setOrders(data);
-    }
-
-    async function fetchUsers() {
-      const { data } = await axios.get("http://127.0.0.1:8000/user/users");
-      setUsers(data);
-    }
-
-    fetchOrderById();
+    getOrderById(params)
+    getDishesForOder()
   }, []);
+
+
 
   const setOrderAsPaid = async () => {
     setIsPaid(!isPaid);
@@ -107,7 +107,7 @@ export default function Order() {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           sx={{ marginBottom: "10px" }}
         >
-          <Item>Payment method :{orders.paymentMethod} </Item>
+          <Item>Payment method :{orderById.paymentMethod} </Item>
           <Item
             onClick={() => {
               setOrderAsPaid();
@@ -115,7 +115,8 @@ export default function Order() {
           >
             {isPaid ? "Is paid" : "Set as paid"}
           </Item>
-          <Item>Item 3</Item>
+          <Item>Waiter: {orderById.user}</Item>
+          <Item>Table: {orderById.table}</Item>
         </Stack>
       </Box>
       <TableContainer component={Paper}>
@@ -128,7 +129,7 @@ export default function Order() {
               <TableCell align="right">Price</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Desc</TableCell>
+              <TableCell>Dish</TableCell>
               <TableCell align="right">Qty.</TableCell>
               <TableCell align="right">Unit</TableCell>
               <TableCell align="right">Sum</TableCell>

@@ -28,7 +28,7 @@ export const RoomsProvider = ({ children }) => {
 
   useEffect(() => {
     getRooms();
-  }, []);
+  },[]);
   let contextData = {
     rooms: rooms,
   };
