@@ -2,9 +2,13 @@ import React from "react";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { OrderProvider } from "./context/OrderContext";
+import { UserProvider } from "./context/UserContext";
+import { TablesProvider } from "./context/TablesContext";
+import { RoomsProvider } from "./context/RoomsContext";
+import { DishProvider } from "./context/DishContext";
+
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-
 import Dashboard from "./screens/dashboard";
 import DishMenu from "./screens/DishMenu";
 import Tables from "./screens/Tables";
@@ -31,27 +35,38 @@ function App() {
       <Router>
         <AuthProvider>
           <OrderProvider>
-            <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
-              <MenuSidebar />
-              <main className="content">
-                <ResponsiveAppBar />
+            <UserProvider>
+              <TablesProvider>
+                <RoomsProvider>
+                  <DishProvider>
+                    <div
+                      id="app"
+                      style={({ height: "100vh" }, { display: "flex" })}
+                    >
+                      <MenuSidebar />
+                      <main className="content">
+                        <ResponsiveAppBar />
 
-                <Routes>
-                  <Route element={<PrivateRoutes />}>
-                    <Route element={<Dashboard />} path="/" />
-                  </Route>
+                        <Routes>
+                          <Route element={<PrivateRoutes />}>
+                            <Route element={<Dashboard />} path="/" />
+                          </Route>
 
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/dishmenu" element={<DishMenu />} />
-                  <Route path="/tables" element={<Tables />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="orders/order/:id" element={<Order />} />
-                  <Route path="/staff" element={<Staff />} />
-                  <Route path="/admin-panel" element={<Admin />} />
-                  <Route path="/login" element={<Login />} />
-                </Routes>
-              </main>
-            </div>
+                          <Route path="/dashboard" element={<Dashboard />} />
+                          <Route path="/dishmenu" element={<DishMenu />} />
+                          <Route path="/tables" element={<Tables />} />
+                          <Route path="/orders" element={<Orders />} />
+                          <Route path="orders/order/:id" element={<Order />} />
+                          <Route path="/staff" element={<Staff />} />
+                          <Route path="/admin-panel" element={<Admin />} />
+                          <Route path="/login" element={<Login />} />
+                        </Routes>
+                      </main>
+                    </div>
+                  </DishProvider>
+                </RoomsProvider>
+              </TablesProvider>
+            </UserProvider>
           </OrderProvider>
         </AuthProvider>
       </Router>

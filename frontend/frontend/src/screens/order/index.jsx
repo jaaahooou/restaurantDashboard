@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import OrderContext from "../../context/OrderContext";
+import UserContext from "../../context/UserContext";
+import TablesContext from "../../context/TablesContext";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,7 +17,7 @@ import TableRow from "@mui/material/TableRow";
 import { Box } from "@mui/system";
 
 import { styled } from "@mui/material/styles";
-import Divider from "@mui/material/Divider";
+
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 
@@ -59,7 +63,6 @@ export default function Order() {
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
   const params = useParams();
-  console.log(params);
 
   useEffect(() => {
     async function fetchOrderById() {
@@ -67,13 +70,11 @@ export default function Order() {
         `http://127.0.0.1:8000/orders/get-order/${params.id}`
       );
       setOrders(data);
-      console.log(data);
     }
 
     async function fetchUsers() {
       const { data } = await axios.get("http://127.0.0.1:8000/user/users");
       setUsers(data);
-      console.log(data);
     }
 
     fetchOrderById();
@@ -95,7 +96,6 @@ export default function Order() {
       config
     );
   };
-  console.log("Paid: ", isPaid);
   const updateOrder = () => {};
 
   return (

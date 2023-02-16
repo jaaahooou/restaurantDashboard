@@ -1,6 +1,9 @@
 import * as React from "react";
 import AuthContext from "../../context/AuthContext";
 import OrderContext from "../../context/OrderContext";
+import UserContext from "../../context/UserContext";
+import TablesContext from "../../context/TablesContext";
+import RoomsContext from "../../context/RoomsContext";
 
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
@@ -39,71 +42,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function CustomizedTables() {
-  const [rooms, setRooms] = useState([]);
-  const [tables, setTables] = useState([]);
-  // const [orders, setOrders] = useState([]);
-  const [users, setUsers] = useState([]);
-  let { authTokens, logoutUser } = useContext(AuthContext);
-  let { orders, getOrders } = useContext(OrderContext);
-  console.log("Orders: ", orders);
-
-  useEffect(() => {
-    async function fetchRooms() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-rooms"
-      );
-      setRooms(data);
-    }
-
-    async function fetchTables() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-tables"
-      );
-      setTables(data);
-    }
-
-    // async function fetchOrders() {
-    //   const config = {
-    //     headers: {
-    //       "Content-type": "application/json",
-    //       Authorization: "Bearer " + String(authTokens.access),
-    //     },
-    //   };
-
-    //   const { data } = await axios.get(
-    //     "http://127.0.0.1:8000/orders/get-orders",
-    //     config
-    //   );
-    //   setOrders(data);
-    // }
-
-    async function fetchUsers() {
-      const { data } = await axios.get("http://127.0.0.1:8000/user/users");
-      setUsers(data);
-      console.log(data);
-    }
-
-    fetchTables();
-    fetchRooms();
-    // fetchOrders();
-    fetchUsers();
-  }, []);
-
-  // let getOrders = async () => {
-  //   console.log(authTokens);
-  //   const config = {
-  //     headers: {
-  //       "Content-type": "application/json",
-  //       Authorization: "Bearer " + String(authTokens.access),
-  //     },
-  //   };
-  //   const { data } = axios.get(
-  //     "http://127.0.0.1:8000/orders/get-orders",
-  //     config
-  //   );
-  //   console.log(data);
-  // };
-  // getOrders();
+  let { orders } = useContext(OrderContext);
+  let { users } = useContext(UserContext);
+  let { tables } = useContext(TablesContext);
+  let { rooms } = useContext(RoomsContext);
 
   return (
     <Box sx={{ margin: "20px" }}>

@@ -3,15 +3,15 @@ import AuthContext from "../context/AuthContext";
 import { useContext } from "react";
 import axios from "axios";
 
-const OrderContext = createContext();
+const TableContext = createContext();
 
-export default OrderContext;
+export default TableContext;
 
-export const OrderProvider = ({ children }) => {
-  const [orders, setOrders] = useState([]);
+export const TablesProvider = ({ children }) => {
   let { authTokens } = useContext(AuthContext);
+  const [tables, setTables] = useState([]);
 
-  let getOrders = async () => {
+  let getTables = async () => {
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -20,24 +20,23 @@ export const OrderProvider = ({ children }) => {
     };
 
     const { data } = await axios.get(
-      "http://127.0.0.1:8000/orders/get-orders",
+      "http://127.0.0.1:8000/orders/get-tables",
       config
     );
-    setOrders(data);
+    setTables(data);
   };
 
   useEffect(() => {
-    getOrders();
+    getTables();
   }, []);
 
   let contextData = {
-    orders: orders,
-    getOrders: getOrders,
+    tables: tables,
   };
 
   return (
-    <OrderContext.Provider value={contextData}>
+    <TableContext.Provider value={contextData}>
       {children}
-    </OrderContext.Provider>
+    </TableContext.Provider>
   );
 };

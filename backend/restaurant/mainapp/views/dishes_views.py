@@ -1,13 +1,10 @@
-from rest_framework import permissions
-from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
-from mainapp.serializers import User,UserSerializer, DishCategorySerializer, DishSerializer
+
+from mainapp.models import DishCategory, Dish, Order, OrderDish
+from mainapp.serializers import  DishCategorySerializer, DishSerializer,OrderDishSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
-from django.contrib.auth.hashers import make_password
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 
 
@@ -45,7 +42,7 @@ def createDishCategory(request):
 
 # Get dish categories (auth) 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getDishCategories(request):
     dishCategories = DishCategory.objects.all()
     serializer = DishCategorySerializer(dishCategories, many=True)
@@ -94,7 +91,17 @@ def deleteDishFromMenu(request, pk):
     dishToRemove.delete()
     return Response("Dish removed")
 
-        
+
+# get ordered dishes
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getOrderDish(request):
+    orderDishs = OrderDish.objects.all()
+    serializer = OrderDishSerializer(orderDishs, many=True)
+    return Response(serializer.data)
+
+
+
         
 
 

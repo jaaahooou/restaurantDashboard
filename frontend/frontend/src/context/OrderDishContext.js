@@ -3,15 +3,16 @@ import AuthContext from "../context/AuthContext";
 import { useContext } from "react";
 import axios from "axios";
 
-const OrderContext = createContext();
+const OrderDishContext = createContext();
 
-export default OrderContext;
+export default OrderDishContext;
 
-export const OrderProvider = ({ children }) => {
-  const [orders, setOrders] = useState([]);
+export const OrderDishProvider = ({ children }) => {
+  const [orderDish, setOrderDish] = useState([]);
+
   let { authTokens } = useContext(AuthContext);
 
-  let getOrders = async () => {
+  let getOrderDishes = async () => {
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -20,24 +21,23 @@ export const OrderProvider = ({ children }) => {
     };
 
     const { data } = await axios.get(
-      "http://127.0.0.1:8000/orders/get-orders",
+      "http://127.0.0.1:8000/dishes/get-order-dishes",
       config
     );
-    setOrders(data);
+    setOrderDish(data);
   };
 
   useEffect(() => {
-    getOrders();
+    getOrderDishes();
   }, []);
 
   let contextData = {
-    orders: orders,
-    getOrders: getOrders,
+    orderDish: orderDish,
   };
 
   return (
-    <OrderContext.Provider value={contextData}>
+    <OrderDishContext.Provider value={contextData}>
       {children}
-    </OrderContext.Provider>
+    </OrderDishContext.Provider>
   );
 };
