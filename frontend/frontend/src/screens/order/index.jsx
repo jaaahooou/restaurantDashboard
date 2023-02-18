@@ -68,12 +68,16 @@ export default function Order() {
   const [isPaid, setIsPaid] = useState(false);
   let {orderDish} = useContext(OrderDishContext)
   let {orderById,getOrderById} = useContext(OrderContext)
+  
   const params = useParams();
   
 
 function getDishesForOder(orderById){
- 
-  let orderedDishes = orderDish.filter(orderedDish=>orderDish.order == orderById.id)
+  
+ console.log(typeof(orderDish[1].order))
+ console.log(typeof(orderById.id))
+//  dishes.filter(dish=>dish.category===category.id)
+  let orderedDishes = orderDish.filter(orderedDish=>orderDish.order === orderDish[1].order)
  console.log("Filtered: ",orderedDishes)
 
   
