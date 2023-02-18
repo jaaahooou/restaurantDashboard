@@ -7,6 +7,8 @@ import { useContext } from "react";
 import OrderContext from "../../context/OrderContext";
 import UserContext from "../../context/UserContext";
 import TablesContext from "../../context/TablesContext";
+import DishContext from "../../context/DishContext";
+import OrderDishContext from "../../context/OrderDishContext";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -21,8 +23,6 @@ import { styled } from "@mui/material/styles";
 
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import DishContext from "../../context/DishContext";
-import OrderDishContext from "../../context/OrderDishContext";
 
 const TAX_RATE = 0.07;
 
@@ -62,33 +62,24 @@ const invoiceTaxes = TAX_RATE * invoiceSubtotal;
 const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
 export default function Order() {
- 
-  
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
-  let {orderDish} = useContext(OrderDishContext)
-  let {orderById,getOrderById} = useContext(OrderContext)
+
+  let { orderDish } = useContext(OrderDishContext);
+  let { orderById, getOrderById } = useContext(OrderContext);
+  let { dishes } = useContext(DishContext);
   const params = useParams();
-  
 
-function getDishesForOder(orderById){
- 
-  let orderedDishes = orderDish.filter(orderedDish=>orderDish.order == orderById.id)
- console.log("Filtered: ",orderedDishes)
-
-  
- 
-
-}
-  
+  function getDishesForOder() {
+    const orderedDishes = orderDish.filter(
+      (orderedDish) => orderedDish.order == orderById.id
+    );
+  }
 
   useEffect(() => {
-    getOrderById(params)
-    getDishesForOder(orderById)
+    getOrderById(params);
+    getDishesForOder();
   }, []);
-
- 
-
 
   const setOrderAsPaid = async () => {
     setIsPaid(!isPaid);
@@ -141,19 +132,55 @@ function getDishesForOder(orderById){
             <TableRow>
               <TableCell>Dish</TableCell>
               <TableCell align="right">Qty.</TableCell>
-              <TableCell align="right">Unit</TableCell>
+              <TableCell align="right">Unit price</TableCell>
+
               <TableCell align="right">Sum</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.desc}>
-                <TableCell>{row.desc}</TableCell>
-                <TableCell align="right">{row.qty}</TableCell>
-                <TableCell align="right">{row.unit}</TableCell>
-                <TableCell align="right">{ccyFormat(row.price)}</TableCell>
-              </TableRow>
-            ))}
+            {orderDish
+              .filter((orderedDish) => orderedDish.order == orderById.id)
+              .map((filteredDish) => (
+                <TableRow key={filteredDish.id}>
+                  <TableCell>
+                    {dishes
+                      .filter(
+                        (dishToDisplay) => dishToDisplay.id == filteredDish.dish
+                      )
+                      .map((filteredDishToDisplay) => (
+                        <div key={filteredDishToDisplay.id}>
+                          {filteredDishToDisplay.title}
+                        </div>
+                      ))}
+                  </TableCell>
+
+                  <TableCell align="right"> {filteredDish.qty}</TableCell>
+                  <TableCell align="right">
+                    {" "}
+                    {dishes
+                      .filter(
+                        (dishToDisplay) => dishToDisplay.id == filteredDish.dish
+                      )
+                      .map((filteredDishToDisplay) => (
+                        <div key={filteredDishToDisplay.id}>
+                          {filteredDishToDisplay.price}
+                        </div>
+                      ))}
+                  </TableCell>
+
+                  <TableCell align="right">
+                    {dishes
+                      .filter(
+                        (dishToDisplay) => dishToDisplay.id == filteredDish.dish
+                      )
+                      .map((filteredDishToDisplay) => (
+                        <div key={filteredDishToDisplay.id}>
+                          {filteredDishToDisplay.price * filteredDish.qty}
+                        </div>
+                      ))}
+                  </TableCell>
+                </TableRow>
+              ))}
 
             <TableRow>
               <TableCell rowSpan={3} />
