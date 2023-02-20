@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useContext } from "react";
 
@@ -16,6 +16,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 import { Box } from "@mui/system";
 
@@ -75,6 +79,33 @@ export default function Order() {
       (orderedDish) => orderedDish.order == orderById.id
     );
   }
+
+  const addDishToOrder = async (filteredDish) => {
+    // USE CALLBACK
+    //const [dishQty, setDishQty] = useState[filteredDish.qty];
+    console.log("Add dish to order");
+    console.log(filteredDish.id);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: {
+        qty: filteredDish.qty + 1,
+      },
+    };
+    const data = await axios
+      .post(
+        `http://127.0.0.1:8000/orders/update-qty/${filteredDish.id}`,
+        config
+      )
+      .then((response) => {
+        axios
+          .get(`http://127.0.0.1:8000/orders/update-qty/${filteredDish.id}`)
+          .then((res) => {
+            console.log(res);
+          });
+      });
+  };
 
   useEffect(() => {
     getOrderById(params);
@@ -154,7 +185,20 @@ export default function Order() {
                       ))}
                   </TableCell>
 
-                  <TableCell align="right"> {filteredDish.qty}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="add"
+                      onClick={() => {
+                        addDishToOrder(filteredDish);
+                      }}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                    {filteredDish.qty}
+                    <IconButton aria-label="delete">
+                      <RemoveIcon />
+                    </IconButton>
+                  </TableCell>
                   <TableCell align="right">
                     {" "}
                     {dishes
@@ -185,7 +229,7 @@ export default function Order() {
             <TableRow>
               <TableCell rowSpan={3} />
               <TableCell colSpan={2}>Subtotal</TableCell>
-              <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+              <TableCell align="right">{orderById.totalPrice}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Tax</TableCell>

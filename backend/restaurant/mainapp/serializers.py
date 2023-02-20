@@ -47,7 +47,8 @@ class OrderSerializer(serializers.ModelSerializer):
         "createdAt", 
         "isDone", 
         "isBrought",
-        "tip"]
+        "tip",
+        "totalPrice"]
 
 class OrderDishSerializer(serializers.ModelSerializer):
     class Meta:
