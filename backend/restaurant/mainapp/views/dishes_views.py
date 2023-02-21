@@ -42,7 +42,7 @@ def createDishCategory(request):
 
 # Get dish categories (auth) 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getDishCategories(request):
     dishCategories = DishCategory.objects.all()
     serializer = DishCategorySerializer(dishCategories, many=True)
