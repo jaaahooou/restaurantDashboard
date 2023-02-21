@@ -5,7 +5,7 @@ import { OrderProvider } from "./context/OrderContext";
 import { UserProvider } from "./context/UserContext";
 import { TablesProvider } from "./context/TablesContext";
 import { RoomsProvider } from "./context/RoomsContext";
-import { DishProvider } from "./context/DishContext";
+
 import { OrderDishProvider } from "./context/OrderDishContext";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -39,8 +39,7 @@ function App() {
             <UserProvider>
               <TablesProvider>
                 <RoomsProvider>
-                  <DishProvider>
-                    <OrderDishProvider>
+                  <OrderDishProvider>
                     <div
                       id="app"
                       style={({ height: "100vh" }, { display: "flex" })}
@@ -65,8 +64,7 @@ function App() {
                         </Routes>
                       </main>
                     </div>
-                    </OrderDishProvider>
-                  </DishProvider>
+                  </OrderDishProvider>
                 </RoomsProvider>
               </TablesProvider>
             </UserProvider>

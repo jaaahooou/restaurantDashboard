@@ -21,7 +21,7 @@ def getAllDishes(request):
 
 # Add dish category (only admin) 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+#@permission_classes([IsAdminUser])
 def createDishCategory(request):
     
     data = request.data 
@@ -50,7 +50,7 @@ def getDishCategories(request):
 
 # Delete dish category (only admin) 
 @api_view(['DELETE'])
-@permission_classes([IsAdminUser])
+#@permission_classes([IsAdminUser])
 def deleteDishCategory(request,pk):
     categoryToRemove = DishCategory.objects.get(id=pk)
     categoryToRemove.delete()
@@ -60,7 +60,7 @@ def deleteDishCategory(request,pk):
 
 # Add dish To menu (only admin)
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+#@permission_classes([IsAdminUser])
 def addDishToMenu(request):
     data = request.data
     dishTitle = data['title']
@@ -85,7 +85,7 @@ def addDishToMenu(request):
 
 # delete dish from menu
 @api_view(['DELETE'])
-@permission_classes([IsAdminUser])
+#@permission_classes([IsAdminUser])
 def deleteDishFromMenu(request, pk):
     dishToRemove = Dish.objects.get(id=pk)
     dishToRemove.delete()
@@ -94,7 +94,7 @@ def deleteDishFromMenu(request, pk):
 
 # get ordered dishes
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getOrderDish(request):
     orderDishs = OrderDish.objects.all()
     serializer = OrderDishSerializer(orderDishs, many=True)
