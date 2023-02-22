@@ -3,11 +3,14 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { dishListReducer, orderDishReducer } from "./reducers/dishReducers";
 import { categoriesListReducer } from "./reducers/categoriesReducers";
+import { orderChangeReducer, orderListReducer } from "./reducers/orderReducers";
 
 const reducer = combineReducers({
   dishList: dishListReducer,
   categoriesList: categoriesListReducer,
   orderDishList: orderDishReducer,
+  order: orderChangeReducer,
+  orderList: orderListReducer,
 });
 const initialState = {};
 const middleware = [thunk];

@@ -52,7 +52,7 @@ export default function Order() {
   const addDishToOrder = async (filteredDish) => {
     // USE CALLBACK
     //const [dishQty, setDishQty] = useState[filteredDish.qty];
-    console.log("Add dish to order:", filteredDish);
+    console.log("Add dish to order:", filteredDish.id);
     // console.log(filteredDish.id);
     // const config = {
     //   headers: {
@@ -80,7 +80,7 @@ export default function Order() {
     dispatch(listOrderDishes());
     dispatch(listDishes());
     getOrderById(params);
-  }, []);
+  }, [dispatch]);
 
   const setOrderAsPaid = async () => {
     setIsPaid(!isPaid);
