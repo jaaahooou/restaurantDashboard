@@ -29,11 +29,7 @@ export const OrderProvider = ({ children }) => {
     setOrders(data);
   };
 
-
-
-  
-  let getOrderById = async(params) => {
-   
+  let getOrderById = async (params) => {
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -46,25 +42,18 @@ export const OrderProvider = ({ children }) => {
       config
     );
 
-    setOrderById(data)
- 
-  
-    
-  }
-
-
-
+    setOrderById(data);
+  };
 
   useEffect(() => {
     getOrders();
-   
   }, []);
 
   let contextData = {
     orders: orders,
-    orderById:orderById,
+    orderById: orderById,
     getOrders: getOrders,
-    getOrderById:getOrderById,
+    getOrderById: getOrderById,
   };
 
   return (
