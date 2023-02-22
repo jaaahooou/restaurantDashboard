@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { listOrderDishes } from "../../actions/dishActions";
 import { listDishes } from "../../actions/dishActions";
+import { getOrderDetails} from "../../actions/ordersActions"
 
 import OrderContext from "../../context/OrderContext";
 
@@ -28,6 +29,7 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -38,12 +40,24 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Order() {
   const dispatch = useDispatch();
+  let { id } = useParams();
+  console.log(id)
   const orderDishList = useSelector((state) => state.orderDishList);
-  const { dishListError, dishListLoading, orderDishes } = orderDishList;
+  const { orderDishListError, orderDishListLoading, orderDishes } = orderDishList;
+  
   const dishList = useSelector((state) => state.dishList);
-  const { dishListerror, dishListloading, dishes } = dishList;
+  const { error:dishListError, loading:dishListloading, dishes } = dishList;
+  
+  const orderList = useSelector((state)=>state.orderList)
+  const {error:orderListError, loading:orderListLoading, orders}= orderList
+
+  const orderDetails = useSelector((state)=>state.orderDetails)
+  const{error:orderDetailsError,loading:orderDetailsLoading, orderDetail } = orderDetails
+  
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
+
+  
 
   let { orderById, getOrderById } = useContext(OrderContext);
 
@@ -79,8 +93,9 @@ export default function Order() {
   useEffect(() => {
     dispatch(listOrderDishes());
     dispatch(listDishes());
+    dispatch(getOrderDetails(id))
     getOrderById(params);
-  }, [dispatch]);
+  }, [dispatch,id]);
 
   const setOrderAsPaid = async () => {
     setIsPaid(!isPaid);
