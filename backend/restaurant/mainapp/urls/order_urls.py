@@ -11,5 +11,7 @@ urlpatterns = [
     path('create-order/<str:pk>',views.createOrder, name='create-order'),
     path('update-order/<str:pk>',views.updateOrder, name='update-order'),
     path('get-order/<str:pk>',views.getOrderById, name='get-order'),
+    path('update-qty/<str:pk>',views.changeDishQty, name='update-qty'),
+
 
 ]

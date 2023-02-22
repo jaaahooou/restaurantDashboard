@@ -11,10 +11,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
-import axios from "axios";
-
-
-
+import { listDishes } from "../../actions/dishActions";
+import { listCategories } from "../../actions/categoriesActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -25,32 +24,17 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ResponsiveGrid() {
-  const [categories, setCategories] = useState([]);
-  const [dishes, setDishes] = useState([]);
-
+  const dispatch = useDispatch();
+  const dishList = useSelector((state) => state.dishList);
+  const { error, loading, dishes } = dishList;
+  const categoriesList = useSelector((state) => state.categoriesList);
+  const { categoriesError, categoriesLoading, categories } = categoriesList;
   useEffect(() => {
-    async function fetchCategories() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/dishes/get-categories"
-      );
-      setCategories(data);
-    }
-
-    async function fetchDishes() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/dishes/get-dishes"
-      );
-
-      setDishes(data);
-      console.log(data);
-    }
-
-    fetchCategories();
-    fetchDishes();
+    dispatch(listDishes());
+    dispatch(listCategories());
   }, []);
 
   return (
-    
     <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
       <Grid
         container
@@ -73,23 +57,24 @@ export default function ResponsiveGrid() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                
-                    {dishes.filter(dish=>dish.category===category.id).map((filtereDish) => (
-                
-                      <TableRow
-                        key={filtereDish.id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >  
-                                  <TableCell component="th" scope="row">
-                                  {filtereDish.title}
-                                  </TableCell>
+                    {dishes
+                      .filter((dish) => dish.category === category.id)
+                      .map((filtereDish) => (
+                        <TableRow
+                          key={filtereDish.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {filtereDish.title}
+                          </TableCell>
 
-                                  <TableCell align="right">{filtereDish.price}</TableCell>
-
-                      </TableRow>
-                    ))}
+                          <TableCell align="right">
+                            {filtereDish.price}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

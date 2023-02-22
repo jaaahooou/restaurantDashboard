@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+import json
 
 
 #create order 
@@ -88,9 +89,31 @@ def addDishToOrder(request,pk):
             order = order,
             qty=qty
         )
+
+        order.totalPrice = float(order.totalPrice) + float(dishToAdd.price)* float(dishToOrder.qty)
+        order.save()
+      
         serializer = OrderDishSerializer(dishToOrder, many=False)
         return Response(serializer.data)
     return Response("You have no permission to do that!")
+
+
+@api_view(['POST',"GET"])
+def changeDishQty(request,pk):
+    
+    data = request.data
+    if request.method == "POST":
+        print("REQ: ", request.method, "DATA: ", data)
+        print("REQ: ", request.method, "DATA[]: ",data["body"]['qty'])
+        user = request.user
+        dishToChange = OrderDish.objects.get(id=pk)
+        # print(dishToChange.qty)
+        dishToChange.qty = data["body"]['qty']
+        dishToChange.save()
+        return Response("Qty updated")
+    return Response("Updated")
+
+
 
 
 #remove dish from order

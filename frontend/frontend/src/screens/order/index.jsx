@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { listOrderDishes } from "../../actions/dishActions";
+import { listDishes } from "../../actions/dishActions";
 
 import OrderContext from "../../context/OrderContext";
-import UserContext from "../../context/UserContext";
-import TablesContext from "../../context/TablesContext";
-import DishContext from "../../context/DishContext";
-import OrderDishContext from "../../context/OrderDishContext";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,14 +17,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+
 import { Box } from "@mui/system";
 
 import { styled } from "@mui/material/styles";
 
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-
-const TAX_RATE = 0.07;
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -34,52 +36,51 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function ccyFormat(num) {
-  return `${num.toFixed(2)}`;
-}
-
-function priceRow(qty, unit) {
-  return qty * unit;
-}
-
-function createRow(desc, qty, unit) {
-  const price = priceRow(qty, unit);
-  return { desc, qty, unit, price };
-}
-
-function subtotal(items) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-}
-
-const rows = [
-  createRow("Paperclips (Box)", 100, 1.15),
-  createRow("Paper (Case)", 10, 45.99),
-  createRow("Waste Basket", 2, 17.99),
-];
-
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
-
 export default function Order() {
+  const dispatch = useDispatch();
+  const orderDishList = useSelector((state) => state.orderDishList);
+  const { dishListError, dishListLoading, orderDishes } = orderDishList;
+  const dishList = useSelector((state) => state.dishList);
+  const { dishListerror, dishListloading, dishes } = dishList;
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
 
-  let { orderDish } = useContext(OrderDishContext);
   let { orderById, getOrderById } = useContext(OrderContext);
-  let { dishes } = useContext(DishContext);
+
   const params = useParams();
 
-  function getDishesForOder() {
-    const orderedDishes = orderDish.filter(
-      (orderedDish) => orderedDish.order == orderById.id
-    );
-  }
+  const addDishToOrder = async (filteredDish) => {
+    // USE CALLBACK
+    //const [dishQty, setDishQty] = useState[filteredDish.qty];
+    console.log("Add dish to order:", filteredDish.id);
+    // console.log(filteredDish.id);
+    // const config = {
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    //   body: {
+    //     qty: filteredDish.qty + 1,
+    //   },
+    // };
+    // const data = await axios
+    //   .post(
+    //     `http://127.0.0.1:8000/orders/update-qty/${filteredDish.id}`,
+    //     config
+    //   )
+    //   .then((response) => {
+    //     axios
+    //       .get(`http://127.0.0.1:8000/orders/update-qty/${filteredDish.id}`)
+    //       .then((res) => {
+    //         console.log(res);
+    //       });
+    //   });
+  };
 
   useEffect(() => {
+    dispatch(listOrderDishes());
+    dispatch(listDishes());
     getOrderById(params);
-    getDishesForOder();
-  }, []);
+  }, [dispatch]);
 
   const setOrderAsPaid = async () => {
     setIsPaid(!isPaid);
@@ -138,7 +139,7 @@ export default function Order() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {orderDish
+            {orderDishes
               .filter((orderedDish) => orderedDish.order == orderById.id)
               .map((filteredDish) => (
                 <TableRow key={filteredDish.id}>
@@ -154,7 +155,20 @@ export default function Order() {
                       ))}
                   </TableCell>
 
-                  <TableCell align="right"> {filteredDish.qty}</TableCell>
+                  <TableCell align="right">
+                    <IconButton
+                      aria-label="add"
+                      onClick={() => {
+                        addDishToOrder(filteredDish);
+                      }}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                    {filteredDish.qty}
+                    <IconButton aria-label="delete">
+                      <RemoveIcon />
+                    </IconButton>
+                  </TableCell>
                   <TableCell align="right">
                     {" "}
                     {dishes
@@ -185,18 +199,16 @@ export default function Order() {
             <TableRow>
               <TableCell rowSpan={3} />
               <TableCell colSpan={2}>Subtotal</TableCell>
-              <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+              <TableCell align="right">{orderById.totalPrice}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Tax</TableCell>
-              <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
-                0
-              )} %`}</TableCell>
-              <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+              <TableCell align="right">50</TableCell>
+              <TableCell align="right">50</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+              <TableCell align="right">50</TableCell>
             </TableRow>
           </TableBody>
         </Table>

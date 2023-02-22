@@ -10,5 +10,6 @@ urlpatterns = [
     path('get-order-dishes', views.getOrderDish, name='get-order-dishes'),
     
     path('remove-dish/<str:pk>', views.deleteDishFromMenu, name='remove-dish'),
-    path('delete-category/<str:pk>', views.deleteDishCategory, name='delete-category')
+    path('delete-category/<str:pk>', views.deleteDishCategory, name='delete-category'),
+   # path('get-order-dish/<str:pk>', views.deleteDishCategory, name='get-order-dish')
 ]

@@ -56,7 +56,7 @@ class Order(models.Model):
     isDone = models.BooleanField(null=False, blank=False, default=False)
     isBrought = models.BooleanField(null=False, blank=False, default=False)
     tip = models.FloatField(default=0.00, blank=True)
-    totalPrice = models.DecimalField(max_digits=7, decimal_places =2, null=True, blank=True)
+    totalPrice = models.DecimalField(max_digits=7, decimal_places =2, null=True, blank=True,default=0)
    
 
     def __str__(self):
