@@ -57,9 +57,9 @@ export default function Order() {
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
 
-  
+  console.log(orderDetails)
 
-  let { orderById, getOrderById } = useContext(OrderContext);
+
 
   const params = useParams();
 
@@ -94,7 +94,7 @@ export default function Order() {
     dispatch(listOrderDishes());
     dispatch(listDishes());
     dispatch(getOrderDetails(id))
-    getOrderById(params);
+ 
   }, [dispatch,id]);
 
   const setOrderAsPaid = async () => {
@@ -124,7 +124,7 @@ export default function Order() {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           sx={{ marginBottom: "10px" }}
         >
-          <Item>Payment method :{orderById.paymentMethod} </Item>
+          <Item>Payment method :{orderDetails.order.paymentMethod} </Item>
           <Item
             onClick={() => {
               setOrderAsPaid();
@@ -132,8 +132,8 @@ export default function Order() {
           >
             {isPaid ? "Is paid" : "Set as paid"}
           </Item>
-          <Item>Waiter: {orderById.user}</Item>
-          <Item>Table: {orderById.table}</Item>
+          <Item>Waiter: {orderDetails.order.user}</Item>
+          <Item>Table: {orderDetails.order.table}</Item>
         </Stack>
       </Box>
       <TableContainer component={Paper}>
@@ -155,7 +155,7 @@ export default function Order() {
           </TableHead>
           <TableBody>
             {orderDishes
-              .filter((orderedDish) => orderedDish.order == orderById.id)
+              .filter((orderedDish) => orderedDish.order == orderDetails.order.id)
               .map((filteredDish) => (
                 <TableRow key={filteredDish.id}>
                   <TableCell>
@@ -214,7 +214,7 @@ export default function Order() {
             <TableRow>
               <TableCell rowSpan={3} />
               <TableCell colSpan={2}>Subtotal</TableCell>
-              <TableCell align="right">{orderById.totalPrice}</TableCell>
+              <TableCell align="right">{orderDetails.order.totalPrice}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Tax</TableCell>
