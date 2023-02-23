@@ -28,13 +28,16 @@ export const listDishes = () => async (dispatch) => {
   }
 };
 
-export const listOrderDishes = () => async (dispatch) => {
+export const listOrderDishes = (id) => async (dispatch) => {
   try {
     dispatch({ type: ORDER_DISH_LIST_REQUEST });
     const { data } = await axios.get("/dishes/get-order-dishes");
+
+    const orderedDishes = data.filter((el) => el.order == id);
+
     dispatch({
       type: ORDER_DISH_LIST_SUCCESS,
-      payload: data,
+      payload: orderedDishes,
     });
   } catch (error) {
     dispatch({
