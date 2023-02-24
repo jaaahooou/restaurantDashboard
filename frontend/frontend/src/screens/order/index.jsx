@@ -57,7 +57,7 @@ export default function Order() {
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
 
-  console.log(orderDetails)
+ console.log(orderDetails)
 
 
 

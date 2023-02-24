@@ -30,6 +30,7 @@ export const listOrders = () => async(dispatch) => {
 }
 
 export const getOrderDetails = (id) => async(dispatch) => {
+    console.log("ID: ", id)
     try {
         dispatch({ type: ORDER_DETAILS_REQUEST })
         const config = {
