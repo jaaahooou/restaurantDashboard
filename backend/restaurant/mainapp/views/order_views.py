@@ -83,6 +83,8 @@ def addDishToOrder(request,pk):
     order = Order.objects.get(table=table)
     print(order.user)
     if user == order.user:
+        if(dishToAdd):
+            print("dish exist")
    
         dishToOrder = OrderDish.objects.create(
             dish=dishToAdd,
