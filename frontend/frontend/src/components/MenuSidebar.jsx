@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import { Link } from "react-router-dom";
 
@@ -22,10 +22,9 @@ import AuthContext from "./../context/AuthContext";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
 });
-
 
 const Item = ({ title, to, icon }) => {
   return (
@@ -44,64 +43,64 @@ const MenuSidebar = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
-
-
   return (
     <ThemeProvider theme={darkTheme}>
-    <CssBaseline /> 
+      <CssBaseline />
 
-    <div id="App" style={({ height: "100vh" }, { display: "flex" })}>
-      <Sidebar
-        breakPoint="md"
-        transitionDuration={800}
-        style={{ height: "100vh"}}
-        
-       
-      >
-        <Menu>
-          <MenuItem
-            icon={<MenuOutlinedIcon />}
-            onClick={() => {
-              collapseSidebar();
-              setIsCollapsed(!isCollapsed);
-            }}
-            style={{ textAlign: "center" }}
-          >
-            {user && `Welcome ${user.username}`}
-          </MenuItem>
-
-          <Stack direction="row" spacing={2}>
-            <Avatar
-              alt=""
-              src="../../assets/images/domi.jpg"
-              sx={
-                isCollapsed
-                  ? { width: 128, height: 128, margin: " 20px auto " }
-                  : { width: 56, height: 56, margin: " 20px auto " }
-              }
-            />
-          </Stack>
-
-          {/* <Item title="Dashboard" icon={<DashboardIcon />} to="/dashboard" /> */}
-          <Item title="Menu" icon={<RestaurantMenuIcon />} to="/dishmenu" />
-          <Item title="Tables" icon={<TableRestaurantIcon />} to="/tables" />
-          <Item title="Orders" icon={<FormatListNumberedIcon />} to="/orders" />
-          <Item title="Staff" icon={<PeopleOutlinedIcon />} to="/staff" />
-          <Item
-            title="Admin"
-            icon={<AdminPanelSettingsIcon />}
-            to="/admin-panel"
-          />
-          {user ? (
-            <MenuItem onClick={logoutUser} icon={<LogoutIcon />}>
-              Logout
+      <div id="App" style={({ height: "100vh" }, { display: "flex" })}>
+        <Sidebar
+          breakPoint="md"
+          transitionDuration={800}
+          style={{ height: "100vh" }}
+        >
+          <Menu>
+            <MenuItem
+              icon={<MenuOutlinedIcon />}
+              onClick={() => {
+                collapseSidebar();
+                setIsCollapsed(!isCollapsed);
+              }}
+              style={{ textAlign: "center" }}
+            >
+              {user && `Welcome ${user.username}`}
             </MenuItem>
-          ) : (
-            <Item title="Login" icon={<LoginIcon />} to="/login" />
-          )}
-        </Menu>
-      </Sidebar>
-    </div>
+
+            <Stack direction="row" spacing={2}>
+              <Avatar
+                alt=""
+                src="../../assets/images/domi.jpg"
+                sx={
+                  isCollapsed
+                    ? { width: 128, height: 128, margin: " 20px auto " }
+                    : { width: 56, height: 56, margin: " 20px auto " }
+                }
+              />
+            </Stack>
+
+            {/* <Item title="Dashboard" icon={<DashboardIcon />} to="/dashboard" /> */}
+            <Item title="Menu" icon={<RestaurantMenuIcon />} to="/dishmenu" />
+            <Item title="Tables" icon={<TableRestaurantIcon />} to="/tables" />
+            <Item
+              title="Orders"
+              icon={<FormatListNumberedIcon />}
+              to="/orders"
+            />
+            <Item title="Staff" icon={<PeopleOutlinedIcon />} to="/staff" />
+            <Item
+              title="Admin"
+              icon={<AdminPanelSettingsIcon />}
+              to="/admin-panel"
+            />
+            {user ? (
+              <MenuItem onClick={logoutUser} icon={<LogoutIcon />}>
+                Logout
+              </MenuItem>
+            ) : (
+              <Item title="Login" icon={<LoginIcon />} to="/login" />
+            )}
+          </Menu>
+        </Sidebar>
+      </div>
     </ThemeProvider>
   );
 };

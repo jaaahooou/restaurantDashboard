@@ -100,10 +100,13 @@ def addDishToOrder(request,pk):
     return Response("You have no permission to do that!")
 
 
+
+
 @api_view(['POST',"GET"])
 def changeDishQty(request,pk):
     
     data = request.data
+    print("DATA: ", data)
     if request.method == "POST":
         print("REQ: ", request.method, "DATA: ", data)
         print("REQ: ", request.method, "DATA[]: ",data["body"]['qty'])

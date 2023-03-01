@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { useContext } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import { listOrderDishes } from "../../actions/dishActions";
 import { listDishes } from "../../actions/dishActions";
-import { getOrderDetails } from "../../actions/ordersActions";
+import { getOrderDetails, addToOrder } from "../../actions/ordersActions";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -52,19 +51,8 @@ export default function Order() {
   const dishList = useSelector((state) => state.dishList);
   const { error: dishListError, loading: dishListloading, dishes } = dishList;
 
-  // const orderList = useSelector((state) => state.orderList);
-  // const {
-  //   error: orderListError,
-  //   loading: orderListLoading,
-  //   orders,
-  // } = orderList;
-
-  // const orderDishList = useSelector((state) => state.orderDishList);
-
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
-
-  const params = useParams();
 
   useEffect(() => {
     dispatch(listDishes());
@@ -73,11 +61,7 @@ export default function Order() {
     dispatch(getOrderDetails(id));
   }, [dispatch, id]);
 
-  const addDishToOrder = async (filteredDish) => {};
-
-  const setOrderAsPaid = async () => {
-    console.log('paid')
-  };
+  const setOrderAsPaid = async () => {};
 
   return loading ? (
     <div>Loading</div>
@@ -140,7 +124,8 @@ export default function Order() {
                   <IconButton
                     aria-label="add"
                     onClick={() => {
-                      addDishToOrder(filteredDish);
+                      dispatch(addToOrder(filteredDish, filteredDish.qty));
+                      dispatch(listOrderDishes(id));
                     }}
                   >
                     <AddIcon />
