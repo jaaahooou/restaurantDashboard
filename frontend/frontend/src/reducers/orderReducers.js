@@ -55,17 +55,33 @@ export const orderDetailReducer = (
   }
 };
 
-export const orderChangeReducer = (state = { filteredDish: [] }, action) => {
+export const orderChangeReducer = (state = { orderDishes: [] }, action) => {
   switch (action.type) {
     case ORDER_ADD_ITEM:
       const item = action.payload;
+      console.log(item)
       console.log("ITEM in reducer: ", item.qty);
-      console.log("Fdish: ", state.filteredDish);
+      console.log("Fdish: ", state.orderDishes);
+      const existItem = state.orderDishes.find((x)=>x.id === item.id)
+      console.log(existItem)
 
+      if(existItem){
+        return {
+          ...state,
+          orderDishes:
+            {
+              ...item, 
+              qty:item.qty+1
+            }
+        }
+      }
       return {
-        ...state,
-        filteredDish: [...state.filteredDish, item],
-      };
+       ...state, 
+       orderDishes : [...state.orderDishes, item],
+       
+
+      }
+      ;
 
       //const existItem = state.orderDishes.find((x) => x.dish === item.dish);
       // if (existItem) {

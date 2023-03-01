@@ -125,7 +125,7 @@ export default function Order() {
                     aria-label="add"
                     onClick={() => {
                       dispatch(addToOrder(filteredDish, filteredDish.qty));
-                      dispatch(listOrderDishes(id));
+                      // dispatch(listOrderDishes(id));
                     }}
                   >
                     <AddIcon />

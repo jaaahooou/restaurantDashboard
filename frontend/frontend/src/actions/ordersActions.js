@@ -1,12 +1,4 @@
 import {
-<<<<<<< HEAD
-    ORDER_LIST_REQUEST,
-    ORDER_LIST_SUCCESS,
-    ORDER_LIST_FAIL,
-    ORDER_DETAILS_REQUEST,
-    ORDER_DETAILS_SUCCESS,
-    ORDER_DETAILS_FAIL,
-=======
   ORDER_LIST_REQUEST,
   ORDER_LIST_SUCCESS,
   ORDER_LIST_FAIL,
@@ -14,7 +6,6 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_ADD_ITEM,
->>>>>>> d53edf3f99324f7a686521f7158257e68266adae
 } from "../constants/orderConstants";
 import axios from "axios";
 
@@ -61,9 +52,6 @@ export const getOrderDetails = (id) => async(dispatch) => {
     }
 };
 
-<<<<<<< HEAD
-export const addToOrder = () => async(dispatch) => {};
-=======
 export const addToOrder = (filteredDish, qty) => async (dispatch) => {
   const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
 
@@ -90,4 +78,3 @@ export const addToOrder = (filteredDish, qty) => async (dispatch) => {
 
   // dispatch : order, dish, qty
 };
->>>>>>> d53edf3f99324f7a686521f7158257e68266adae
