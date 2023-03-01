@@ -59,27 +59,31 @@ export const orderChangeReducer = (state = { orderDishes: [] }, action) => {
   switch (action.type) {
     case ORDER_ADD_ITEM:
       const item = action.payload;
-      console.log(item)
-      console.log("ITEM in reducer: ", item.qty);
-      console.log("Fdish: ", state.orderDishes);
-      const existItem = state.orderDishes.find((x)=>x.id === item.id)
-      console.log(existItem)
+      console.log("item from payloadL: ",item)
+      // console.log("ITEM in reducer: ", item.qty);
+      // console.log("Fdish: ", state.orderDishes);
+     
+      
 
-      if(existItem){
-        return {
-          ...state,
-          orderDishes:
-            {
-              ...item, 
-              qty:item.qty+1
-            }
-        }
-      }
-      return {
-       ...state, 
-       orderDishes : [...state.orderDishes, item],
-       
+  const existItem = state.orderDishes.find((x) => x.dish === item.dish);
+  console.log("Exist item: ",existItem)
+  console.log("State: ",state.orderDishes)
 
+
+  
+      if (existItem) {
+          return {
+              ...state,
+              orderDishes: state.orderDishes.map((x) =>
+                  x.dish == existItem.dish ? {...existItem,
+                  qty:existItem.qty+1} : x
+              ),
+          };
+      } else {
+          return {
+              ...state,
+              orderDishes: [...state.orderDishes, item],
+          };
       }
       ;
 

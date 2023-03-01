@@ -60,7 +60,7 @@ export const addToOrder = (filteredDish, qty) => async (dispatch) => {
     payload: {
       order: data.order,
       dish: data.dish,
-      qty: data.qty + 1,
+      qty: data.qty,
     },
   });
   const config = {
