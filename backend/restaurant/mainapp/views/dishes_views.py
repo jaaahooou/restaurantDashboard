@@ -100,6 +100,17 @@ def getOrderDish(request):
     serializer = OrderDishSerializer(orderDishs, many=True)
     return Response(serializer.data)
 
+#get ordered dish by id
+
+@api_view(['GET'])
+def getOrderedDishById(request,pk):
+    orderedDish = OrderDish.objects.get(id=pk)
+    
+    serializer = OrderDishSerializer(orderedDish, many=False)
+    return Response(serializer.data)
+
+
+
 
 
         

@@ -5,6 +5,7 @@ import {
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
+  ORDER_ADD_ITEM,
 } from "../constants/orderConstants";
 import axios from "axios";
 
@@ -53,4 +54,29 @@ export const getOrderDetails = (id) => async (dispatch) => {
   }
 };
 
-export const addToOrder = () => async (dispatch) => {};
+export const addToOrder = (filteredDish, qty) => async (dispatch) => {
+  const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
+
+  dispatch({
+    type: ORDER_ADD_ITEM,
+    payload: {
+      order: data.order,
+      dish: data.dish,
+      qty: data.qty + 1,
+    },
+  });
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: {
+      order: data.order,
+      dish: data.dish,
+      qty: data.qty + 1,
+    },
+  };
+
+  //const { orderedDish } = await axios.post(`/orders/update-qty/${id}`, config);
+
+  // dispatch : order, dish, qty
+};
