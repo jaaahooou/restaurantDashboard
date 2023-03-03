@@ -124,7 +124,7 @@ console.log(orderDishes)
                   <IconButton
                     aria-label="add"
                     onClick={() => {
-                      dispatch(addToOrder(filteredDish, filteredDish.qty));
+                      dispatch(addToOrder(filteredDish, id));
                      //dispatch(listOrderDishes(id));
                     }}
                   >
