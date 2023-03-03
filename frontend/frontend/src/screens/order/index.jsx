@@ -57,12 +57,12 @@ export default function Order() {
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listOrderDishes(id));
-
+    
     dispatch(getOrderDetails(id));
   }, [dispatch, id]);
 
   const setOrderAsPaid = async () => {};
-
+console.log(orderDishes)
   return loading ? (
     <div>Loading</div>
   ) : error ? (
@@ -125,12 +125,12 @@ export default function Order() {
                     aria-label="add"
                     onClick={() => {
                       dispatch(addToOrder(filteredDish, filteredDish.qty));
-                      dispatch(listOrderDishes(id));
+                     //dispatch(listOrderDishes(id));
                     }}
                   >
                     <AddIcon />
-                  </IconButton>
-                  {filteredDish.qty}
+                  </IconButton >
+                    {filteredDish.qty}
                   <IconButton aria-label="delete">
                     <RemoveIcon />
                   </IconButton>

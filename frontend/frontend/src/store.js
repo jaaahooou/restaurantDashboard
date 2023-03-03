@@ -9,7 +9,7 @@ const reducer = combineReducers({
     dishList: dishListReducer,
     categoriesList: categoriesListReducer,
     orderDishList: orderDishReducer,
-    order: orderChangeReducer,
+    //order: orderChangeReducer,
     orderList: orderListReducer,
     orderDetails: orderDetailReducer
 });
