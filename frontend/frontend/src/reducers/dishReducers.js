@@ -28,11 +28,13 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
     switch (action.type) {
         case ORDER_ADD_ITEM:
             const item = action.payload;
-            console.log("item from payloadL: ", item)
+            console.log("item from payloadL: ", item.data)
+            console.log("Id in rducer: ", action.payload.id)
+            let changedItem = item.data.find(x=> x.id == item.filteredDish.id)
+            console.log("Changed: ", changedItem)
+            console.log("Filtered Dish",item.filteredDish)
+            
 
-            state.orderDishes = {...item, qty: item.qty + 1 }
-                // console.log("ITEM in reducer: ", item.qty);
-                // console.log("Fdish: ", state.orderDishes);
 
 
             console.log("STATE: ", state)

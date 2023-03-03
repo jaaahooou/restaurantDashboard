@@ -62,8 +62,8 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
   dispatch({
     type: ORDER_ADD_ITEM,
     payload: {
-      data
-    },
+      data,id, filteredDish
+    }
   });
   const config = {
     headers: {
