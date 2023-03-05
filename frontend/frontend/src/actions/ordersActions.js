@@ -55,15 +55,20 @@ export const getOrderDetails = (id) => async (dispatch) => {
   }
 };
 
-export const addToOrder = (filteredDish) => async (dispatch) => {
-  const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
+export const addToOrder = (filteredDish, id) => async (dispatch) => {
+  //filteredDish - dish we want to change
+  //id - order id
+  const { data } = await axios.get(
+    `/orders/get-order-dishes/${filteredDish.id}`
+  );
+  console.log("order id: ", id);
 
   dispatch({
     type: ORDER_ADD_ITEM,
     payload: {
-      order: data.order,
-      dish: data.dish,
-      qty: data.qty + 1,
+      data,
+      id,
+      filteredDish,
     },
   });
   const config = {

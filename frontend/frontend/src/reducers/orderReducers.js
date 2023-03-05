@@ -55,48 +55,68 @@ export const orderDetailReducer = (
   }
 };
 
-export const orderChangeReducer = (state = { orderDishes: [] }, action) => {
-  switch (action.type) {
-    case ORDER_ADD_ITEM:
-      let item = action.payload;
-      console.log("item from payloadL: ", item);
+// export const orderChangeReducer = (state = { orderDishes: [] }, action) => {
 
-      // console.log("ITEM in reducer: ", item.qty);
-      // console.log("Fdish: ", state.orderDishes);
+//     switch (action.type) {
 
-      state.orderDishes = [...state.orderDishes, item];
-      console.log(state);
+//         case ORDER_ADD_ITEM:
+//             const item = action.payload;
+//             console.log("item from payloadL: ", item)
 
-      if (item) {
-        return {
-          ...state,
-          orderDishes: state.orderDishes.map((x) =>
-            x.item == item.dish ? { ...item, qty: item.qty + 1 } : x
-          ),
-        };
-      } else {
-        return {
-          ...state,
-          orderDishes: [...state.orderDishes, item],
-        };
-      }
-      //const existItem = state.orderDishes.find((x) => x.dish === item.dish);
-      // if (existItem) {
-      //     return {
-      //         ...state,
-      //         cartItems: state.orderDishes.map((x) =>
-      //             x.dish === existItem.dish ? item : x
-      //         ),
-      //     };
-      // } else {
-      //     return {
-      //         ...state,
-      //         orderDishes: [...state.orderDishes, item],
-      //     };
-      // }
-      console.log("object");
+//             state.orderDishes = {...item, qty: item.qty + 1 }
+//                 // console.log("ITEM in reducer: ", item.qty);
+//                 // console.log("Fdish: ", state.orderDishes);
 
-    default:
-      return state;
-  }
-};
+//             console.log("STATE: ", state)
+//             if (item) {
+//                 console.log('Getting state')
+//                 return {
+//                     ...state,
+//                     orderDishes: {...item,
+//                         qty: item.qty + 1
+//                     },
+//                 };
+//             }
+
+//             //     const existItem = state.orderDishes.find((x) => x.dish === item.dish);
+//             //     console.log("Exist item: ", existItem)
+//             //     console.log("State: ", state.orderDishes)
+
+//             //     if (existItem) {
+//             //         return {
+//             //             ...state,
+//             //             orderDishes: state.orderDishes.map((x) =>
+//             //                 x.dish == existItem.dish ? {...existItem,
+//             //                     qty: existItem.qty + 1
+//             //                 } : x
+//             //             ),
+//             //         };
+//             //     } else {
+//             //         return {
+//             //             ...state,
+//             //             orderDishes: [...state.orderDishes, item],
+//             //         };
+//             //     };
+
+//             //     //const existItem = state.orderDishes.find((x) => x.dish === item.dish);
+//             //     // if (existItem) {
+//             //     //     return {
+//             //     //         ...state,
+//             //     //         cartItems: state.orderDishes.map((x) =>
+//             //     //             x.dish === existItem.dish ? item : x
+//             //     //         ),
+//             //     //     };
+//             //     // } else {
+//             //     //     return {
+//             //     //         ...state,
+//             //     //         orderDishes: [...state.orderDishes, item],
+//             //     //     };
+//             //     // }
+//             //     console.log("object");
+
+//         default:
+//             console.log("Default: ", state)
+
+//             return state;
+//     }
+// };

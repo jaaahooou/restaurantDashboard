@@ -66,7 +66,7 @@ export default function Order() {
   }, [dispatch, id]);
 
   const setOrderAsPaid = async () => {};
-
+  console.log(orderDishes);
   return loading ? (
     <div>Loading</div>
   ) : error ? (
@@ -128,22 +128,14 @@ export default function Order() {
                   <IconButton
                     aria-label="add"
                     onClick={() => {
-                      dispatch(listOrderDishes(id));
-                      dispatch(addToOrder(filteredDish, filteredDish.qty));
+                      dispatch(addToOrder(filteredDish, id));
+                      //dispatch(listOrderDishes(id));
                     }}
                   >
                     <AddIcon />
                   </IconButton>
-
                   {filteredDish.qty}
-
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => {
-                      dispatch(removeFromOrder(filteredDish, filteredDish.qty));
-                      dispatch(listOrderDishes(id));
-                    }}
-                  >
+                  <IconButton aria-label="delete">
                     <RemoveIcon />
                   </IconButton>
                 </TableCell>
