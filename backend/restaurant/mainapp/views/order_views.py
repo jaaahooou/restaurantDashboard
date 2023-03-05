@@ -106,14 +106,16 @@ def addDishToOrder(request,pk):
 def changeDishQty(request,pk):
     
     data = request.data
-    print("DATA: ", data)
+    
     if request.method == "POST":
-        print("REQ: ", request.method, "DATA: ", data)
-        print("REQ: ", request.method, "DATA[]: ",data["body"]['qty'])
+       
         user = request.user
         dishToChange = OrderDish.objects.get(id=pk)
-        # print(dishToChange.qty)
+        
         dishToChange.qty = data["body"]['qty']
+        if dishToChange.qty == 0:
+            dishToChange.delete()
+        
         dishToChange.save()
         return Response("Qty updated")
     return Response("Updated")

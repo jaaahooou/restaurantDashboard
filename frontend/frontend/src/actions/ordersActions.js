@@ -7,6 +7,7 @@ import {
   ORDER_DETAILS_FAIL,
   ORDER_ADD_ITEM,
   ORDER_REMOVE_ITEM,
+  ORDER_DELETE_ITEM,
 } from "../constants/orderConstants";
 import axios from "axios";
 
@@ -84,8 +85,6 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
     `/orders/update-qty/${filteredDish.id}`,
     config
   );
-
-  // dispatch : order, dish, qty
 };
 
 export const removeFromOrder = (filteredDish, id) => async (dispatch) => {
@@ -113,4 +112,31 @@ export const removeFromOrder = (filteredDish, id) => async (dispatch) => {
     `/orders/update-qty/${filteredDish.id}`,
     config
   );
+};
+
+export const deleteFromOrder = (filteredDish, id) => async (dispatch) => {
+  const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
+  dispatch({
+    type: ORDER_DELETE_ITEM,
+    payload: {
+      data,
+      id,
+      filteredDish,
+    },
+  });
+  // const config = {
+  //   headers: {
+  //     "Content-type": "application/json",
+  //   },
+  //   body: {
+  //     order: data.order,
+  //     dish: data.dish,
+  //     qty: data.qty - 1,
+  //   },
+  // };
+
+  // const { orderedDish } = await axios.post(
+  //   `/orders/update-qty/${filteredDish.id}`,
+  //   config
+  // );
 };

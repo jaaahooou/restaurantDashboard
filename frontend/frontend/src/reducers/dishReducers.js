@@ -6,7 +6,11 @@ import {
   ORDER_DISH_LIST_SUCCESS,
   ORDER_DISH_LIST_FAIL,
 } from "../constants/dishConstants";
-import { ORDER_ADD_ITEM, ORDER_REMOVE_ITEM } from "../constants/orderConstants";
+import {
+  ORDER_ADD_ITEM,
+  ORDER_REMOVE_ITEM,
+  ORDER_DELETE_ITEM,
+} from "../constants/orderConstants";
 
 export const dishListReducer = (state = { dishes: [] }, action) => {
   switch (action.type) {
@@ -44,10 +48,27 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
           x.id == itemToRemove.filteredDish.id
             ? {
                 ...itemToRemove.filteredDish,
-                qty: itemToRemove.filteredDish.qty - 1,
+                qty:
+                  itemToRemove.filteredDish.qty > 1
+                    ? itemToRemove.filteredDish.qty - 1
+                    : itemToRemove.filteredDish.qty,
               }
             : x
         ),
+      };
+
+    case ORDER_DELETE_ITEM:
+      const itemToDelete = action.payload.data;
+      console.log("Item to delete: ", itemToDelete.id);
+      const ItemToDeleteIndex = state.orderDishes.findIndex(
+        (x) => x.id == itemToDelete.id
+      );
+      console.log(state.orderDishes);
+      console.log("Index: ", ItemToDeleteIndex);
+
+      return {
+        ...state,
+        orderDishes: state.orderDishes.splice(ItemToDeleteIndex, 1),
       };
 
     case ORDER_DISH_LIST_REQUEST:

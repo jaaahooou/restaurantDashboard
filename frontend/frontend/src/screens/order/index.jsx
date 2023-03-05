@@ -10,6 +10,7 @@ import {
   getOrderDetails,
   addToOrder,
   removeFromOrder,
+  deleteFromOrder,
 } from "../../actions/ordersActions";
 
 import Table from "@mui/material/Table";
@@ -22,6 +23,7 @@ import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { Box } from "@mui/system";
 
@@ -66,7 +68,7 @@ export default function Order() {
   }, [dispatch, id]);
 
   const setOrderAsPaid = async () => {};
-  console.log(orderDishes);
+
   return loading ? (
     <div>Loading</div>
   ) : error ? (
@@ -132,13 +134,22 @@ export default function Order() {
                     <AddIcon />
                   </IconButton>
                   {filteredDish.qty}
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => {
-                      dispatch(removeFromOrder(filteredDish, id));
-                    }}
-                  >
-                    <RemoveIcon />
+
+                  <IconButton aria-label="delete">
+                    {" "}
+                    {filteredDish.qty > 1 ? (
+                      <RemoveIcon
+                        onClick={() => {
+                          dispatch(removeFromOrder(filteredDish, id));
+                        }}
+                      />
+                    ) : (
+                      <DeleteOutlineIcon
+                        onClick={() => {
+                          dispatch(deleteFromOrder(filteredDish, id));
+                        }}
+                      />
+                    )}
                   </IconButton>
                 </TableCell>
                 <TableCell align="right">
@@ -161,7 +172,9 @@ export default function Order() {
                     )
                     .map((filteredDishToDisplay) => (
                       <div key={filteredDishToDisplay.id}>
-                        {filteredDishToDisplay.price * filteredDish.qty}
+                        {(
+                          filteredDishToDisplay.price * filteredDish.qty
+                        ).toFixed(2)}
                       </div>
                     ))}
                 </TableCell>
