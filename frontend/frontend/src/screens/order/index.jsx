@@ -88,8 +88,6 @@ export default function Order() {
           >
             {isPaid ? "Is paid" : "Set as paid"}
           </Item>
-          <Item>Waiter:{orderDetails.order.user} </Item>
-          <Item>Table: </Item>
         </Stack>
       </Box>
       <TableContainer component={Paper}>
@@ -129,13 +127,17 @@ export default function Order() {
                     aria-label="add"
                     onClick={() => {
                       dispatch(addToOrder(filteredDish, id));
-                      //dispatch(listOrderDishes(id));
                     }}
                   >
                     <AddIcon />
                   </IconButton>
                   {filteredDish.qty}
-                  <IconButton aria-label="delete">
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => {
+                      dispatch(removeFromOrder(filteredDish, id));
+                    }}
+                  >
                     <RemoveIcon />
                   </IconButton>
                 </TableCell>

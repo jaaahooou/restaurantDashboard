@@ -58,9 +58,7 @@ export const getOrderDetails = (id) => async (dispatch) => {
 export const addToOrder = (filteredDish, id) => async (dispatch) => {
   //filteredDish - dish we want to change
   //id - order id
-  const { data } = await axios.get(
-    `/orders/get-order-dishes/${filteredDish.id}`
-  );
+  const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
   console.log("order id: ", id);
 
   dispatch({
@@ -90,14 +88,14 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
   // dispatch : order, dish, qty
 };
 
-export const removeFromOrder = (filteredDish) => async (dispatch) => {
+export const removeFromOrder = (filteredDish, id) => async (dispatch) => {
   const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
   dispatch({
     type: ORDER_REMOVE_ITEM,
     payload: {
-      order: data.order,
-      dish: data.dish,
-      qty: data.qty - 1,
+      data,
+      id,
+      filteredDish,
     },
   });
   const config = {
