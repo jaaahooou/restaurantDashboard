@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { listOrderDishes } from "../../actions/dishActions";
 import { listDishes } from "../../actions/dishActions";
-import { getOrderDetails, addToOrder } from "../../actions/ordersActions";
+import {
+  getOrderDetails,
+  addToOrder,
+  removeFromOrder,
+} from "../../actions/ordersActions";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -124,14 +128,22 @@ export default function Order() {
                   <IconButton
                     aria-label="add"
                     onClick={() => {
-                      dispatch(addToOrder(filteredDish, filteredDish.qty));
                       dispatch(listOrderDishes(id));
+                      dispatch(addToOrder(filteredDish, filteredDish.qty));
                     }}
                   >
                     <AddIcon />
                   </IconButton>
+
                   {filteredDish.qty}
-                  <IconButton aria-label="delete">
+
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => {
+                      dispatch(removeFromOrder(filteredDish, filteredDish.qty));
+                      dispatch(listOrderDishes(id));
+                    }}
+                  >
                     <RemoveIcon />
                   </IconButton>
                 </TableCell>
