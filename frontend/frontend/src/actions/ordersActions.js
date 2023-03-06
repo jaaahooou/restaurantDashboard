@@ -55,9 +55,8 @@ export const getOrderDetails = (id) => async(dispatch) => {
 export const addToOrder = (filteredDish, id) => async (dispatch) => {
   //filteredDish - dish we want to change
   //id - order id
-  const { data } = await axios.get(`/orders/get-order-dishes/${filteredDish.id}`);
-  console.log("order id: ",id)
-
+  const { data } = await axios.get(`/orders/get-order-dishes`);
+  const { dishToUpdate } = await axios.get(`/orders/get-order-dish/${filteredDish.id}`);
 
   dispatch({
     type: ORDER_ADD_ITEM,
