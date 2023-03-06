@@ -6,7 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { listOrderDishes } from "../../actions/dishActions";
 import { listDishes } from "../../actions/dishActions";
-import { getOrderDetails, addToOrder } from "../../actions/ordersActions";
+import {
+  getOrderDetails,
+  addToOrder,
+  removeFromOrder,
+  deleteFromOrder,
+} from "../../actions/ordersActions";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -18,6 +23,7 @@ import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { Box } from "@mui/system";
 
@@ -57,12 +63,12 @@ export default function Order() {
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listOrderDishes(id));
-    
+
     dispatch(getOrderDetails(id));
   }, [dispatch, id]);
 
   const setOrderAsPaid = async () => {};
-console.log(orderDishes)
+
   return loading ? (
     <div>Loading</div>
   ) : error ? (
@@ -84,8 +90,6 @@ console.log(orderDishes)
           >
             {isPaid ? "Is paid" : "Set as paid"}
           </Item>
-          <Item>Waiter:{orderDetails.order.user} </Item>
-          <Item>Table: </Item>
         </Stack>
       </Box>
       <TableContainer component={Paper}>
@@ -125,14 +129,27 @@ console.log(orderDishes)
                     aria-label="add"
                     onClick={() => {
                       dispatch(addToOrder(filteredDish, id));
-                     //dispatch(listOrderDishes(id));
                     }}
                   >
                     <AddIcon />
-                  </IconButton >
-                    {filteredDish.qty}
+                  </IconButton>
+                  {filteredDish.qty}
+
                   <IconButton aria-label="delete">
-                    <RemoveIcon />
+                    {" "}
+                    {filteredDish.qty > 1 ? (
+                      <RemoveIcon
+                        onClick={() => {
+                          dispatch(removeFromOrder(filteredDish, id));
+                        }}
+                      />
+                    ) : (
+                      <DeleteOutlineIcon
+                        onClick={() => {
+                          dispatch(deleteFromOrder(filteredDish, id));
+                        }}
+                      />
+                    )}
                   </IconButton>
                 </TableCell>
                 <TableCell align="right">
@@ -155,7 +172,9 @@ console.log(orderDishes)
                     )
                     .map((filteredDishToDisplay) => (
                       <div key={filteredDishToDisplay.id}>
-                        {filteredDishToDisplay.price * filteredDish.qty}
+                        {(
+                          filteredDishToDisplay.price * filteredDish.qty
+                        ).toFixed(2)}
                       </div>
                     ))}
                 </TableCell>
@@ -164,19 +183,10 @@ console.log(orderDishes)
 
             <TableRow>
               <TableCell rowSpan={3} />
-              <TableCell colSpan={2}>Subtotal</TableCell>
+              <TableCell colSpan={2}>Total</TableCell>
               <TableCell align="right">
                 {orderDetails.order.totalPrice}
               </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Tax</TableCell>
-              <TableCell align="right">50</TableCell>
-              <TableCell align="right">50</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={2}>Total</TableCell>
-              <TableCell align="right">50</TableCell>
             </TableRow>
           </TableBody>
         </Table>
