@@ -183,19 +183,10 @@ export default function Order() {
 
             <TableRow>
               <TableCell rowSpan={3} />
-              <TableCell colSpan={2}>Subtotal</TableCell>
+              <TableCell colSpan={2}>Total</TableCell>
               <TableCell align="right">
                 {orderDetails.order.totalPrice}
               </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Tax</TableCell>
-              <TableCell align="right">50</TableCell>
-              <TableCell align="right">50</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={2}>Total</TableCell>
-              <TableCell align="right">50</TableCell>
             </TableRow>
           </TableBody>
         </Table>

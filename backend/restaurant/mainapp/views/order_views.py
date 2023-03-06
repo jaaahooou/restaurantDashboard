@@ -114,7 +114,12 @@ def changeDishQty(request,pk):
         
         dishToChange.qty = data["body"]['qty']
         if dishToChange.qty == 0:
+            print('delete: ', dishToChange)
+            print("Order Dishes before delete: ",len(OrderDish.objects.all()))
             dishToChange.delete()
+            
+            print("Order Dishes after delete: ",len(OrderDish.objects.all()))
+            return Response("Element deleted")
         
         dishToChange.save()
         return Response("Qty updated")

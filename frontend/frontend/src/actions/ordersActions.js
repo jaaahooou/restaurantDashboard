@@ -60,7 +60,6 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
   //filteredDish - dish we want to change
   //id - order id
   const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
-  console.log("order id: ", id);
 
   dispatch({
     type: ORDER_ADD_ITEM,
@@ -88,7 +87,10 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
 };
 
 export const removeFromOrder = (filteredDish, id) => async (dispatch) => {
+  //filteredDish - dish we want to change
+  //id - order id
   const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
+
   dispatch({
     type: ORDER_REMOVE_ITEM,
     payload: {
@@ -115,7 +117,10 @@ export const removeFromOrder = (filteredDish, id) => async (dispatch) => {
 };
 
 export const deleteFromOrder = (filteredDish, id) => async (dispatch) => {
+  //filteredDish - dish we want to change
+  //id - order id
   const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
+
   dispatch({
     type: ORDER_DELETE_ITEM,
     payload: {
@@ -124,19 +129,21 @@ export const deleteFromOrder = (filteredDish, id) => async (dispatch) => {
       filteredDish,
     },
   });
-  // const config = {
-  //   headers: {
-  //     "Content-type": "application/json",
-  //   },
-  //   body: {
-  //     order: data.order,
-  //     dish: data.dish,
-  //     qty: data.qty - 1,
-  //   },
-  // };
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: {
+      order: data.order,
+      dish: data.dish,
+      qty: data.qty - 1,
+    },
+  };
 
-  // const { orderedDish } = await axios.post(
-  //   `/orders/update-qty/${filteredDish.id}`,
-  //   config
-  // );
+  console.log(config);
+
+  const { orderedDish } = await axios.post(
+    `/orders/update-qty/${filteredDish.id}`,
+    config
+  );
 };

@@ -59,16 +59,12 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
 
     case ORDER_DELETE_ITEM:
       const itemToDelete = action.payload.data;
-      console.log("Item to delete: ", itemToDelete.id);
-      const ItemToDeleteIndex = state.orderDishes.findIndex(
-        (x) => x.id == itemToDelete.id
-      );
-      console.log(state.orderDishes);
-      console.log("Index: ", ItemToDeleteIndex);
 
       return {
         ...state,
-        orderDishes: state.orderDishes.splice(ItemToDeleteIndex, 1),
+        orderDishes: state.orderDishes.filter(
+          (dishToDelete) => dishToDelete.id !== itemToDelete.id
+        ),
       };
 
     case ORDER_DISH_LIST_REQUEST:
