@@ -57,6 +57,19 @@ export const addToOrder = (filteredDish, id) => async(dispatch) => {
     //id - order id
     //const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
 
+    let urls = [
+        `/dishes/get-order-dish/${filteredDish.id}`,
+        `/orders/get-order/${id}`,
+    ]
+
+    const requests = urls.map((url)=>axios.get(url))
+
+    axios.all(requests).then((responses)=>{
+        responses.forEach(resp=>{
+            console.log(resp)
+        })
+    })
+
     const { data } = await axios.get(`/orders/get-order/${id}`);
     console.log("ID: ", id, "Order: ", data);
     dispatch({
