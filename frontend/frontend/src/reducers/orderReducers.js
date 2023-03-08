@@ -50,6 +50,7 @@ export const orderDetailReducer = (
         loading: false,
         order: action.payload,
       };
+
     default:
       return state;
   }

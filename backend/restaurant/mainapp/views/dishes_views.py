@@ -68,7 +68,7 @@ def addDishToMenu(request):
    #check if dish category exist
     if DishCategory.objects.filter(title=str(dishCategory)).count()<=0:
         return Response("Category doesn`t exist")
-        #chack if dish exist
+        #check if dish exist
     elif DishCategory.objects.filter(title=str(dishCategory)).count()>0:
         if Dish.objects.filter(title=str(dishTitle)).count()>0:
             return Response("This dish already exist")
@@ -97,6 +97,7 @@ def deleteDishFromMenu(request, pk):
 #@permission_classes([IsAuthenticated])
 def getOrderDish(request):
     orderDishs = OrderDish.objects.all()
+   
     serializer = OrderDishSerializer(orderDishs, many=True)
     return Response(serializer.data)
 
@@ -105,6 +106,8 @@ def getOrderDish(request):
 @api_view(['GET'])
 def getOrderedDishById(request,pk):
     orderedDish = OrderDish.objects.get(id=pk)
+    dishes = Dish.objects.all()
+   
     
     serializer = OrderDishSerializer(orderedDish, many=False)
     return Response(serializer.data)
