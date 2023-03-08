@@ -66,7 +66,7 @@ export const addToOrder = (filteredDish, id) => async(dispatch) => {
 
     axios.all(requests).then((responses)=>{
         responses.forEach(resp=>{
-            console.log(resp)
+            console.log(resp.data)
         })
     })
 
