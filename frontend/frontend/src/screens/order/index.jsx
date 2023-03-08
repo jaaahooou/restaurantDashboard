@@ -129,6 +129,7 @@ export default function Order() {
                     aria-label="add"
                     onClick={() => {
                       dispatch(addToOrder(filteredDish, id));
+                      dispatch(getOrderDetails(id));
                     }}
                   >
                     <AddIcon />
@@ -141,12 +142,14 @@ export default function Order() {
                       <RemoveIcon
                         onClick={() => {
                           dispatch(removeFromOrder(filteredDish, id));
+                          dispatch(getOrderDetails(id));
                         }}
                       />
                     ) : (
                       <DeleteOutlineIcon
                         onClick={() => {
                           dispatch(deleteFromOrder(filteredDish, id));
+                          dispatch(getOrderDetails(id));
                         }}
                       />
                     )}

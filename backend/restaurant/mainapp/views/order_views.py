@@ -3,12 +3,7 @@ from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
 from mainapp.serializers import User,UserSerializer, RoomSerializer, TableSerializer, OrderSerializer,OrderDishSerializer 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
-from django.contrib.auth.hashers import make_password
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
-import json
+
 
 
 #create order 
@@ -85,7 +80,7 @@ def addDishToOrder(request,pk):
     if user == order.user:
         if(dishToAdd):
             print("dish exist")
-   
+        
         dishToOrder = OrderDish.objects.create(
             dish=dishToAdd,
             order = order,
@@ -111,17 +106,24 @@ def changeDishQty(request,pk):
        
         user = request.user
         dishToChange = OrderDish.objects.get(id=pk)
+  
+        orderedDishQtyBeforeChange = dishToChange.qty
         
         dishToChange.qty = data["body"]['qty']
+        order = Order.objects.get(id=dishToChange.order.id)
+        if orderedDishQtyBeforeChange < dishToChange.qty:
+            order.totalPrice = round((float(order.totalPrice) + float(dishToChange.dish.price)),2)
+        else:
+            order.totalPrice = round((float(order.totalPrice) - float(dishToChange.dish.price)),2)
         if dishToChange.qty == 0:
-            print('delete: ', dishToChange)
-            print("Order Dishes before delete: ",len(OrderDish.objects.all()))
+           
             dishToChange.delete()
             
-            print("Order Dishes after delete: ",len(OrderDish.objects.all()))
+         
             return Response("Element deleted")
         
         dishToChange.save()
+        order.save()
         return Response("Qty updated")
     return Response("Updated")
 

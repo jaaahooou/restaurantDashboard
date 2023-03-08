@@ -23,7 +23,8 @@ export const listOrders = () => async(dispatch) => {
         dispatch({
             type: ORDER_LIST_FAIL,
             payload: error.response && error.response.data.message ?
-                error.response.data.message : error.message,
+                error.response.data.message :
+                error.message,
         });
     }
 };
@@ -47,7 +48,8 @@ export const getOrderDetails = (id) => async(dispatch) => {
         dispatch({
             type: ORDER_DETAILS_FAIL,
             payload: error.response && error.response.data.detail ?
-                error.response.data.detail : error.message,
+                error.response.data.detail :
+                error.message,
         });
     }
 };
@@ -60,17 +62,17 @@ export const addToOrder = (filteredDish, id) => async(dispatch) => {
     let urls = [
         `/dishes/get-order-dish/${filteredDish.id}`,
         `/orders/get-order/${id}`,
-    ]
+    ];
 
-    const requests = urls.map((url)=>axios.get(url))
+    const requests = urls.map((url) => axios.get(url));
 
-    axios.all(requests).then((responses)=>{
-        responses.forEach(resp=>{
-            console.log(resp.data)
-        })
-    })
+    axios.all(requests).then((responses) => {
+        responses.forEach((resp) => {
+            console.log(resp.data);
+        });
+    });
 
-    const { data } = await axios.get(`/orders/get-order/${id}`);
+    const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
     console.log("ID: ", id, "Order: ", data);
     dispatch({
         type: ORDER_ADD_ITEM,

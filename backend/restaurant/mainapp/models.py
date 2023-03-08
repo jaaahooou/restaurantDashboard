@@ -64,9 +64,10 @@ class Order(models.Model):
 
 
 class OrderDish(models.Model):
-    dish = models.ForeignKey(Dish, on_delete=models.SET_NULL, null=True, blank = True)
+    dish = models.ForeignKey(Dish, on_delete=models.SET_NULL, null=True, blank = True, related_name='logs')
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank = True)
     qty = models.IntegerField(null=True, blank=True, default=0)
+    
     
 
     def __str__(self):
