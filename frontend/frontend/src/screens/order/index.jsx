@@ -181,13 +181,19 @@ export default function Order() {
                       </div>
                     ))}
                 </TableCell>
+                
               </TableRow>
+
+
+
+              
             ))}
 
             <TableRow>
               <TableCell rowSpan={3} />
               <TableCell colSpan={2}>Total</TableCell>
               <TableCell align="right">
+                
                 {orderDetails.order.totalPrice}
               </TableCell>
             </TableRow>

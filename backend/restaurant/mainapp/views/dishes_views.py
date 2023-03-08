@@ -96,9 +96,9 @@ def deleteDishFromMenu(request, pk):
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
 def getOrderDish(request):
-    orderDishs = OrderDish.objects.all()
+    orderDishes = OrderDish.objects.all()
    
-    serializer = OrderDishSerializer(orderDishs, many=True)
+    serializer = OrderDishSerializer(orderDishes, many=True)
     return Response(serializer.data)
 
 #get ordered dish by id

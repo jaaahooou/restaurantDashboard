@@ -68,12 +68,12 @@ export const addToOrder = (filteredDish, id) => async(dispatch) => {
 
     axios.all(requests).then((responses) => {
         responses.forEach((resp) => {
-            console.log(resp.data);
+           
         });
     });
 
     const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
-    console.log("ID: ", id, "Order: ", data);
+
     dispatch({
         type: ORDER_ADD_ITEM,
         payload: {
@@ -82,6 +82,7 @@ export const addToOrder = (filteredDish, id) => async(dispatch) => {
             filteredDish,
         },
     });
+ 
     const config = {
         headers: {
             "Content-type": "application/json",
@@ -153,8 +154,7 @@ export const deleteFromOrder = (filteredDish, id) => async(dispatch) => {
         },
     };
 
-    console.log(config);
-
+ 
     const { orderedDish } = await axios.post(
         `/orders/update-qty/${filteredDish.id}`,
         config
