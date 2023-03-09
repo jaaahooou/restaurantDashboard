@@ -52,7 +52,7 @@ export const orderDetailReducer = (
                 order: action.payload,
             };
         case ORDER_ADD_ITEM:
-            console.log(action.payload)
+            //console.log(action.payload)
             return {
 
                 loading: false,

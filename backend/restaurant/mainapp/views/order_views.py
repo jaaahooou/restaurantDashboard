@@ -110,8 +110,10 @@ def changeDishQty(request,pk):
         orderedDishQtyBeforeChange = dishToChange.qty
         
         dishToChange.qty = data["body"]['qty']
+        
         print("orderedDishQtyBeforeChange: ", orderedDishQtyBeforeChange)
         print("dishToChange.qty: ",dishToChange.qty)
+        
         order = Order.objects.get(id=dishToChange.order.id)
         if orderedDishQtyBeforeChange < dishToChange.qty:
             order.totalPrice = round((float(order.totalPrice) + float(dishToChange.dish.price)),2)
