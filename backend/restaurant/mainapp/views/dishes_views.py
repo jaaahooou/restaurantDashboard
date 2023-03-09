@@ -112,8 +112,8 @@ def getOrderedDishById(request,pk):
     
     serializer = OrderDishSerializer(orderedDish, many=False)
     return Response({
-        "serializer" : serializer.data,
-        "serializer1" : dishPrice,
+        "orderedDishData" : serializer.data,
+        "orderedDishPrice" : dishPrice,
         })
 
 
