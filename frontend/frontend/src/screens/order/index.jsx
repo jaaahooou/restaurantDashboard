@@ -68,6 +68,7 @@ export default function Order() {
   }, [dispatch, id]);
 
   const setOrderAsPaid = async () => {};
+  console.log(orderDetails)
 
   return loading ? (
     <div>Loading</div>
