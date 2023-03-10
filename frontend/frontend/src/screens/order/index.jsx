@@ -83,7 +83,7 @@ export default function Order() {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           sx={{ marginBottom: "10px" }}
         >
-          <Item>Payment method :{orderDetails.order.paymentMethod}</Item>
+          {/* <Item>Payment method :{orderDetails.order.paymentMethod}</Item> */}
           <Item
             onClick={() => {
               setOrderAsPaid();
@@ -195,7 +195,7 @@ export default function Order() {
               <TableCell colSpan={2}>Total</TableCell>
               <TableCell align="right">
                 
-                {orderDetails.order.totalPrice}
+                {/* {orderDetails.order.totalPrice} */}
               </TableCell>
             </TableRow>
           </TableBody>

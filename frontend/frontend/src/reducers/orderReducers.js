@@ -35,6 +35,8 @@ export const orderDetailReducer = async(
     state = { loading: true, order: [] },
     action
 ) => {
+
+
     switch (action.type) {
         case ORDER_DETAILS_REQUEST:
             return {
@@ -42,6 +44,7 @@ export const orderDetailReducer = async(
                 loading: true,
             };
         case ORDER_DETAILS_SUCCESS:
+            console.log(action.payload)
             return {
                 loading: false,
                 order: action.payload,
@@ -51,46 +54,10 @@ export const orderDetailReducer = async(
                 loading: false,
                 order: action.payload,
             };
-        case ORDER_ADD_ITEM:
-            const id = action.payload.id;
-            console.log(id);
 
-            const getData = async() => {
-                try {
-                    const config = {
-                        headers: {
-                            "Content-type": "application/json",
-                            //Authorization: "Bearer " + String(authTokens.access),
-                        },
-                    };
-                    const order = await axios.get(`/orders/get-order/${id}`, config);
-                    state.order.data.totalPrice = order.data.totalPrice + 10;
-                    return {
-                        loading: false,
-                        order: state.order,
-                    };
-                } catch (err) {
-                    console.log(err);
-                }
-            };
-            getData();
-            console.log(state);
 
-            return {
-                loading: false,
-                order: state.order,
-            };
 
         default:
             return state;
     }
 };
-
-// return {
-//   ...state,
-//   orderDishes: state.orderDishes.map((x) =>
-//     x.id == item.filteredDish.id
-//       ? { ...item.filteredDish, qty: item.filteredDish.qty + 1 }
-//       : x
-//   ),
-// };
