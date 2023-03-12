@@ -1,15 +1,14 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
+import { useDispatch, useSelector } from "react-redux";
+
+import { listTables } from "../../actions/tablesActions";
+
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { experimentalStyled as styled } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
+
 import Typography from "@mui/material/Typography";
 
 import axios from "axios";
@@ -23,8 +22,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Tables() {
+  const dispatch = useDispatch();
+
+  const tableList = useSelector((state) => state.tableList);
+  const { error, loading, tables } = tableList;
+
   const [rooms, setRooms] = useState([]);
-  const [tables, setTables] = useState([]);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -35,13 +38,6 @@ export default function Tables() {
       setRooms(data);
     }
 
-    async function fetchTables() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-tables"
-      );
-      setTables(data);
-    }
-
     async function fetchOrders() {
       const { data } = await axios.get(
         "http://127.0.0.1:8000/orders/get-orders"
@@ -50,16 +46,13 @@ export default function Tables() {
       console.log(data);
     }
 
-    fetchTables();
     fetchRooms();
     fetchOrders();
   }, []);
 
-  useEffect(() => {}, []);
-
-  const handleClick = () => {
-    console.info("You clicked the Chip.");
-  };
+  useEffect(() => {
+    dispatch(listTables());
+  }, []);
 
   return (
     <div sx={{ maxwidth: 1024 }}>

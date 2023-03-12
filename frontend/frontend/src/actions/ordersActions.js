@@ -87,16 +87,44 @@ export const increaseDishQty = (filteredDish, id) => async (dispatch) => {
 };
 
 export const addToOrder = (filteredDish, id) => async (dispatch) => {
-  console.log("DIsh: ", filteredDish);
-  console.log("Order: ", id);
+  console.log("FilteredDish: ", filteredDish);
 
-  dispatch({
-    type: ORDER_ADD_NEW_ITEM,
-    payload: {
-      id,
-      filteredDish,
-    },
-  });
+  const { data } = await axios.get("/dishes/get-order-dishes");
+
+  const orderedDishes = data.filter((el) => el.order == id);
+  console.log(orderedDishes);
+  console.log(filteredDish);
+  const ordereDishExist = orderedDishes.filter(
+    (el) => el.dish == filteredDish.id
+  );
+
+  if (ordereDishExist.length < 1) {
+    console.log("OrderderDishesExist: ", ordereDishExist);
+    dispatch({
+      type: ORDER_ADD_NEW_ITEM,
+      payload: {
+        id,
+        filteredDish,
+      },
+    });
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: {
+        dish: filteredDish.id,
+        order: id,
+        qty: 1,
+        price: filteredDish.price,
+      },
+    };
+
+    const { dishToAdd } = await axios.post(`/orders/add-dish-to-order`, config);
+  }
+  if (ordereDishExist.length > 0) {
+    alert("Dish you want to add already exist in order. Try to increase qty");
+  }
 };
 
 export const removeFromOrder = (filteredDish, id) => async (dispatch) => {

@@ -51,16 +51,17 @@ def updateOrder(request,pk):
     user = request.user
     table = order.table
       
-    if user == order.user:
+    
        
-        table.isOccupied = data['isOccupied']
-        table.save()
-        order.isPaid = data['isPaid']
-        order.save()
+    table.isOccupied = False
+    table.save()
+    order.isPaid = data['body']['isPaid']
+    print( order.isPaid)
+    order.save()
         
-        return Response("Order updated")
+       
 
-    return Response("You have no permission to do that!")
+    return Response("Order updated")
 
 
 
@@ -68,31 +69,35 @@ def updateOrder(request,pk):
 
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
-def addDishToOrder(request,pk):
+def addDishToOrder(request):
     data=request.data 
-    user = request.user
-   
-    table = data['table_id']
-    qty = data['qty']
-    dishToAdd = Dish.objects.get(id=pk)
-    order = Order.objects.get(table=table)
-    print(order.user)
-    if user == order.user:
-        if(dishToAdd):
-            print("dish exist")
-        
-        dishToOrder = OrderDish.objects.create(
-            dish=dishToAdd,
-            order = order,
-            qty=qty
+    user = request.user  
+
+  
+    
+    order = Order.objects.get(id=data['body']['order'])      
+    dish = Dish.objects.get(id=data['body']['dish'])
+    qty = int(data['body']['qty'])
+
+    existOrderDish = OrderDish.objects.filter(dish=dish)
+    print("ExisteOrderDis: ",len(existOrderDish))
+    if len(existOrderDish)>0:
+        print("Dish exist, try to increase qty")
+        return Response("Dish exist, try to increase qty")
+           
+    dishToOrder = OrderDish.objects.create(
+        dish=dish,
+        order = order,
+        qty=qty,
+
         )
 
-        order.totalPrice = float(order.totalPrice) + float(dishToAdd.price)* float(dishToOrder.qty)
-        order.save()
+    order.totalPrice = float(order.totalPrice) + float(data['body']['price'])
+    order.save()
       
-        serializer = OrderDishSerializer(dishToOrder, many=False)
-        return Response(serializer.data)
-    return Response("You have no permission to do that!")
+    serializer = OrderDishSerializer(dishToOrder, many=False)
+    return Response(serializer.data)
+
 
 
 

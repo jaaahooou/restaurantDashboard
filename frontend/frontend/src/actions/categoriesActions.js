@@ -7,7 +7,6 @@ import axios from "axios";
 
 export const listCategories = () => async (dispatch) => {
   try {
-    console.log("DUPA");
     dispatch({ type: CATEGORIES_LIST_REQUEST });
     const { data } = await axios.get("dishes/get-categories");
     dispatch({

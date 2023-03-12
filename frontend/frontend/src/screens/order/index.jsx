@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { listOrderDishes } from "../../actions/dishActions";
@@ -22,21 +21,21 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+
 import { Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { styled } from "@mui/material/styles";
 
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-import Button from "@mui/material/Button";
-
-import { Box } from "@mui/system";
-
-import { styled } from "@mui/material/styles";
-
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
+import axios from "axios";
+import AuthContext from "../../context/AuthContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -66,8 +65,6 @@ export default function Order() {
   const categoriesList = useSelector((state) => state.categoriesList);
   const { categoriesError, categoriesLoading, categories } = categoriesList;
 
-  console.log(categoriesList);
-
   const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
@@ -82,6 +79,21 @@ export default function Order() {
 
   const setOrderAsPaid = async () => {
     setIsPaid(!isPaid);
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        //Authorization: "Bearer " + String(authTokens.access),
+      },
+      body: {
+        isPaid: true,
+      },
+    };
+
+    const { setOrderAsPaid } = await axios.post(
+      `/orders/update-order/${id}`,
+      config
+    );
   };
   const openAndCloseMenu = async () => {
     setOpenMenu(!openMenu);
@@ -103,11 +115,12 @@ export default function Order() {
           <Item>Payment method :{orderDetails.order.paymentMethod}</Item>
           <Item
             onClick={() => {
-              setOrderAsPaid();
+              setOrderAsPaid(id);
             }}
           >
             {isPaid ? "Is paid" : "Set as paid"}
           </Item>
+          <Item>{orderDetails.order.isPaid ? "is paid" : "not paid"}</Item>
         </Stack>
       </Box>
       <TableContainer component={Paper}>
@@ -207,7 +220,7 @@ export default function Order() {
                     openAndCloseMenu();
                   }}
                 >
-                  Add new dish
+                  {openMenu ? "Close menu" : "Add new dish"}
                 </Button>
               </TableCell>
             </TableRow>
