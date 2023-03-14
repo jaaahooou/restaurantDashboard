@@ -56,7 +56,7 @@ export default function CustomizedTables() {
               <StyledTableCell>Table no</StyledTableCell>
               <StyledTableCell align="center">Room</StyledTableCell>
               <StyledTableCell align="center">Waiter/Waitress</StyledTableCell>
-              <StyledTableCell align="center">price</StyledTableCell>
+
               <StyledTableCell align="center">Details</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -89,7 +89,7 @@ export default function CustomizedTables() {
                       <div key={filteredUsers.id}>{filteredUsers.username}</div>
                     ))}
                 </StyledTableCell>
-                <StyledTableCell align="center">{order.price}</StyledTableCell>
+
                 <StyledTableCell style={{ cursor: "pointer" }} align="center">
                   <LinkContainer
                     component="button"

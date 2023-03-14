@@ -4,7 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { dishListReducer, orderDishReducer } from "./reducers/dishReducers";
 import { categoriesListReducer } from "./reducers/categoriesReducers";
 import { orderListReducer, orderDetailReducer } from "./reducers/orderReducers";
-import { listTablesReducer } from "./reducers/tablesReducers";
+import { listTablesReducer, listRoomsReducer } from "./reducers/tablesReducers";
 
 const reducer = combineReducers({
   dishList: dishListReducer,
@@ -13,6 +13,7 @@ const reducer = combineReducers({
   tableList: listTablesReducer,
   orderList: orderListReducer,
   orderDetails: orderDetailReducer,
+  roomsList: listRoomsReducer,
 });
 const initialState = {};
 const middleware = [thunk];

@@ -1,17 +1,26 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { listTables } from "../../actions/tablesActions";
+import OrderContext from "../../context/OrderContext";
+
+import { listTables, listRooms } from "../../actions/tablesActions";
+import { listOrders } from "../../actions/ordersActions";
 
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+
 import Paper from "@mui/material/Paper";
 import { experimentalStyled as styled } from "@mui/material/styles";
 
-import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
-import axios from "axios";
+import Button from "@mui/material/Button";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -21,95 +30,109 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
 export default function Tables() {
   const dispatch = useDispatch();
+  let { orders } = useContext(OrderContext);
 
   const tableList = useSelector((state) => state.tableList);
   const { error, loading, tables } = tableList;
 
-  const [rooms, setRooms] = useState([]);
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    async function fetchRooms() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-rooms"
-      );
-      setRooms(data);
-    }
-
-    async function fetchOrders() {
-      const { data } = await axios.get(
-        "http://127.0.0.1:8000/orders/get-orders"
-      );
-      setOrders(data);
-      console.log(data);
-    }
-
-    fetchRooms();
-    fetchOrders();
-  }, []);
+  const roomsList = useSelector((state) => state.roomsList);
+  const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
 
   useEffect(() => {
     dispatch(listTables());
+    dispatch(listRooms());
   }, []);
 
-  return (
+  return loading ? (
+    <div>Loading</div>
+  ) : error ? (
+    <div>Something went wrong</div>
+  ) : (
     <div sx={{ maxwidth: 1024 }}>
-      <Box
-        style={{
-          display: "flex",
-          margin: "20px auto",
-          maxWidth: 1024,
-        }}
-        sx={{ flexGrow: 1 }}
-      >
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 1, sm: 8, md: 12 }}
-        >
-          {tables.map((table) => (
-            <Grid item xs={1} sm={4} md={4} key={table.id}>
-              <Item sx={{ cursor: "pointer" }}>
-                <Typography
-                  variant="h5"
-                  align="left"
-                  style={{
-                    borderBottom: "1px solid grey",
-                    marginBottom: "20px",
-                  }}
-                >
-                  Table No: {table.tableNumber}
-                </Typography>
+      <Box sx={{ margin: "20px" }}>
+        <TableContainer component={Paper}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Table no</StyledTableCell>
+                <StyledTableCell align="center">Room</StyledTableCell>
+                <StyledTableCell align="center"> Max Persons</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+              </TableRow>
+            </TableHead>
 
-                {rooms
-                  .filter((room) => room.id == table.room)
-                  .map((filteredRoom) => (
-                    <div key={filteredRoom.id}>
-                      <Typography align="left" variant="h6">
-                        {filteredRoom.name}
-                      </Typography>
+            <TableBody>
+              {tables.map((table) => (
+                <StyledTableRow key={table.id}>
+                  <StyledTableCell component="th" scope="row">
+                    {table.id}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {rooms
+                      .filter((room) => room.id == table.room)
+                      .map((filteredRoom) => (
+                        <div key={filteredRoom.id}>{filteredRoom.name}</div>
+                      ))}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {table.numberOfPersons}
+                  </StyledTableCell>
 
-                      <Typography>
-                        Number of persons: {table.numberOfPersons}
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        style={
-                          table.isOccupied
-                            ? { color: "red" }
-                            : { color: "green" }
-                        }
+                  <StyledTableCell style={{ cursor: "pointer" }} align="center">
+                    {table.isOccupied ? (
+                      <div>
+                        {orders
+                          .filter((order) => order.table == table.id)
+                          .map((filteredOrder) => (
+                            <LinkContainer
+                              component="button"
+                              to={`/orders/order/${filteredOrder.id}`}
+                              onClick={() => {
+                                console.log("Clicked");
+                              }}
+                            >
+                              <Button variant="contained">details</Button>
+                            </LinkContainer>
+                          ))}
+                      </div>
+                    ) : (
+                      <LinkContainer
+                        component="button"
+                        to={`/`}
+                        onClick={() => {
+                          console.log("Clicked");
+                        }}
                       >
-                        {table.isOccupied ? "Occupied" : "Avaible"}
-                      </Typography>
-                    </div>
-                  ))}
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
+                        <Button variant="contained">add order</Button>
+                      </LinkContainer>
+                    )}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </div>
   );
