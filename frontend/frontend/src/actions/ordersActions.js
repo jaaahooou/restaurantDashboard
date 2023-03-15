@@ -9,8 +9,43 @@ import {
   ORDER_REMOVE_ITEM,
   ORDER_DELETE_ITEM,
   ORDER_ADD_NEW_ITEM,
+  ORDER_CREATE_REQUEST,
+  ORDER_CREATE_SUCCESS,
+  ORDER_CREATE_FAIL,
 } from "../constants/orderConstants";
 import axios from "axios";
+
+export const createOrder = (id) => async (dispatch) => {
+  console.log("Działam");
+  try {
+    dispatch({
+      type: ORDER_CREATE_REQUEST,
+    });
+    const authTokens = localStorage.setItem("authTokens", JSON.stringify(data));
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: "Bearer " + String(authTokens.access),
+      },
+    };
+    const { data } = await axios.post(`/orders/create-order/${id}`, config);
+    console.log("DATA IN ADD ORDER: ", data);
+    dispatch({
+      type: ORDER_CREATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDER_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+
+    console.log(error);
+  }
+};
 
 export const listOrders = () => async (dispatch) => {
   try {

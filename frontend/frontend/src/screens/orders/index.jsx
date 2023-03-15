@@ -1,12 +1,14 @@
 import * as React from "react";
 import AuthContext from "../../context/AuthContext";
-import OrderContext from "../../context/OrderContext";
+
 import UserContext from "../../context/UserContext";
 import TablesContext from "../../context/TablesContext";
 import RoomsContext from "../../context/RoomsContext";
 
-import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import { useEffect, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -18,8 +20,9 @@ import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
 import Button from "@mui/material/Button";
 import { LinkContainer } from "react-router-bootstrap";
-
 import "@fontsource/public-sans";
+
+import { listOrders } from "../../actions/ordersActions";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,12 +45,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function CustomizedTables() {
-  let { orders } = useContext(OrderContext);
+  let location = useLocation();
+  let navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   let { users } = useContext(UserContext);
   let { tables } = useContext(TablesContext);
   let { rooms } = useContext(RoomsContext);
 
-  return (
+  const orderList = useSelector((state) => state.orderList);
+  const { error, loading, orders } = orderList;
+  useEffect(() => {
+    dispatch(listOrders());
+  }, []);
+
+  return loading ? (
+    <div>Loading</div>
+  ) : error ? (
+    <div>Something went wrong</div>
+  ) : (
     <Box sx={{ margin: "20px" }}>
       <TableContainer component={Paper}>
         <Table aria-label="customized table">

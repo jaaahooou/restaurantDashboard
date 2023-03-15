@@ -6,6 +6,7 @@ import OrderContext from "../../context/OrderContext";
 
 import { listTables, listRooms } from "../../actions/tablesActions";
 import { listOrders } from "../../actions/ordersActions";
+import { createOrder } from "../../actions/ordersActions";
 
 import Box from "@mui/material/Box";
 
@@ -64,6 +65,11 @@ export default function Tables() {
     dispatch(listRooms());
   }, []);
 
+  const addOrderHandler = (id) => {
+    console.log("add handler: ", id);
+    dispatch(createOrder(id));
+  };
+
   return loading ? (
     <div>Loading</div>
   ) : error ? (
@@ -106,6 +112,7 @@ export default function Tables() {
                           .filter((order) => order.table == table.id)
                           .map((filteredOrder) => (
                             <LinkContainer
+                              key={filteredOrder.id}
                               component="button"
                               to={`/orders/order/${filteredOrder.id}`}
                               onClick={() => {
@@ -117,15 +124,14 @@ export default function Tables() {
                           ))}
                       </div>
                     ) : (
-                      <LinkContainer
-                        component="button"
-                        to={`/`}
+                      <Button
+                        variant="contained"
                         onClick={() => {
-                          console.log("Clicked");
+                          addOrderHandler(table.id);
                         }}
                       >
-                        <Button variant="contained">add order</Button>
-                      </LinkContainer>
+                        add order
+                      </Button>
                     )}
                   </StyledTableCell>
                 </StyledTableRow>

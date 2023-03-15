@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view,permission_classes
 def createOrder(request,pk):
     data = request.data
     user = request.user
+    print(user)
     # get table for order, each order is assigned to table
     table = Table.objects.get(id=pk)
     if table.isOccupied == False:
