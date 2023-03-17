@@ -35,7 +35,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import axios from "axios";
-import AuthContext from "../../context/AuthContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -65,7 +64,6 @@ export default function Order() {
   const categoriesList = useSelector((state) => state.categoriesList);
   const { categoriesError, categoriesLoading, categories } = categoriesList;
 
-  const [users, setUsers] = useState([]);
   const [isPaid, setIsPaid] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -294,7 +292,6 @@ export default function Order() {
                                 <Button
                                   onClick={() => {
                                     dispatch(addToOrder(filtereDish, id));
-                                    console.log("Add new item");
                                   }}
                                 >
                                   <AddIcon />

@@ -1,11 +1,9 @@
 import * as React from "react";
-import AuthContext from "../../context/AuthContext";
 
-import UserContext from "../../context/UserContext";
-import TablesContext from "../../context/TablesContext";
-import RoomsContext from "../../context/RoomsContext";
+import { listTables, listRooms } from "../../actions/tablesActions";
+import { getUsers } from "../../actions/userActions";
 
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -50,14 +48,33 @@ export default function CustomizedTables() {
 
   const dispatch = useDispatch();
 
-  let { users } = useContext(UserContext);
-  let { tables } = useContext(TablesContext);
-  let { rooms } = useContext(RoomsContext);
-
   const orderList = useSelector((state) => state.orderList);
   const { error, loading, orders } = orderList;
+
+  const userList = useSelector((state) => state.userList);
+  const { error: userListError, loading: userListloading, users } = userList;
+  //const { error, loading, users } = userList;
+
+  const tableList = useSelector((state) => state.tableList);
+  const {
+    error: tableListError,
+    loading: tableListLoading,
+    tables,
+  } = tableList;
+
+  const roomsList = useSelector((state) => state.roomsList);
+  const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  console.log("USERS IN COMP: ", users);
+
   useEffect(() => {
+    dispatch(getUsers());
     dispatch(listOrders());
+    dispatch(listTables());
+    dispatch(listRooms());
   }, []);
 
   return loading ? (
@@ -98,14 +115,20 @@ export default function CustomizedTables() {
                       </div>
                     ))}
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {" "}
-                  {users
-                    .filter((user) => user.id == order.user)
-                    .map((filteredUsers) => (
-                      <div key={filteredUsers.id}>{filteredUsers.username}</div>
-                    ))}
-                </StyledTableCell>
+                {users ? (
+                  <StyledTableCell align="center">
+                    {" "}
+                    {users
+                      .filter((user) => user.id == order.user)
+                      .map((filteredUsers) => (
+                        <div key={filteredUsers.id}>
+                          {filteredUsers.first_name}
+                        </div>
+                      ))}
+                  </StyledTableCell>
+                ) : (
+                  <div>name</div>
+                )}
 
                 <StyledTableCell style={{ cursor: "pointer" }} align="center">
                   <LinkContainer

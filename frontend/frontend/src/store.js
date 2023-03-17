@@ -5,6 +5,7 @@ import { dishListReducer, orderDishReducer } from "./reducers/dishReducers";
 import { categoriesListReducer } from "./reducers/categoriesReducers";
 import { orderListReducer, orderDetailReducer } from "./reducers/orderReducers";
 import { listTablesReducer, listRoomsReducer } from "./reducers/tablesReducers";
+import { userLoginReducer, userListReducer } from "./reducers/userReducers";
 
 const reducer = combineReducers({
   dishList: dishListReducer,
@@ -14,8 +15,18 @@ const reducer = combineReducers({
   orderList: orderListReducer,
   orderDetails: orderDetailReducer,
   roomsList: listRoomsReducer,
+  userLogin: userLoginReducer,
+  userList: userListReducer,
 });
-const initialState = {};
+
+const userInfoFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : [];
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+  userList: { users: [] },
+};
 const middleware = [thunk];
 const store = createStore(
   reducer,

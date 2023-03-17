@@ -2,8 +2,6 @@ import * as React from "react";
 import { useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import OrderContext from "../../context/OrderContext";
-
 import { listTables, listRooms } from "../../actions/tablesActions";
 import { listOrders } from "../../actions/ordersActions";
 import { createOrder } from "../../actions/ordersActions";
@@ -52,10 +50,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function Tables() {
   const dispatch = useDispatch();
-  let { orders } = useContext(OrderContext);
+
+  const orderList = useSelector((state) => state.orderList);
+  const { error, loading, orders } = orderList;
 
   const tableList = useSelector((state) => state.tableList);
-  const { error, loading, tables } = tableList;
+  const {
+    error: tableListError,
+    loading: tableListLoading,
+    tables,
+  } = tableList;
 
   const roomsList = useSelector((state) => state.roomsList);
   const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
@@ -63,6 +67,7 @@ export default function Tables() {
   useEffect(() => {
     dispatch(listTables());
     dispatch(listRooms());
+    dispatch(listOrders());
   }, []);
 
   const addOrderHandler = (id) => {

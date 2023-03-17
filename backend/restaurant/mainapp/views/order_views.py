@@ -3,6 +3,8 @@ from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
 from mainapp.serializers import User,UserSerializer, RoomSerializer, TableSerializer, OrderSerializer,OrderDishSerializer 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 
@@ -12,16 +14,22 @@ from rest_framework.decorators import api_view,permission_classes
 def createOrder(request,pk):
     data = request.data
     user = request.user
+    print("USER: ",data['body']["user"])
+
+    user = User.objects.get(id=data['body']["user"])
     print(user)
+
     # get table for order, each order is assigned to table
     table = Table.objects.get(id=pk)
     if table.isOccupied == False:
                   
         order = Order.objects.create(
-            user = request.user,
+            user = user,
             table = table
         )
+        print(order)
     else:
+        print("dupa")
         return Response('Table is occupied')
 
     #swicth table.isOccupied to True, no one else can make an order assigned this table
@@ -45,9 +53,9 @@ def getOrderById(request,pk):
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def updateOrder(request,pk):
-    print('start')
+   
     data= request.data
-    print(data)
+   
     order = Order.objects.get(id=pk)
     user = request.user
     table = order.table
@@ -57,8 +65,9 @@ def updateOrder(request,pk):
     table.isOccupied = False
     table.save()
     order.isPaid = data['body']['isPaid']
+    
     print( order.isPaid)
-    order.save()
+    order.delete()
         
        
 
@@ -73,6 +82,7 @@ def updateOrder(request,pk):
 def addDishToOrder(request):
     data=request.data 
     user = request.user  
+    print(data)
 
   
     
@@ -80,7 +90,13 @@ def addDishToOrder(request):
     dish = Dish.objects.get(id=data['body']['dish'])
     qty = int(data['body']['qty'])
 
-    existOrderDish = OrderDish.objects.filter(dish=dish)
+    print
+
+    orderedDishes = OrderDish.objects.filter(order=order)
+    print(orderedDishes)
+
+    
+    existOrderDish = orderedDishes.filter(dish=dish)
     print("ExisteOrderDis: ",len(existOrderDish))
     if len(existOrderDish)>0:
         print("Dish exist, try to increase qty")
@@ -107,6 +123,9 @@ def addDishToOrder(request):
 def changeDishQty(request,pk):
     
     data = request.data
+    user= request.user
+    print(request.headers)
+    print("USER: ", user)
     
     if request.method == "POST":
        

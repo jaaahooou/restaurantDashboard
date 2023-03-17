@@ -15,21 +15,28 @@ import {
 } from "../constants/orderConstants";
 import axios from "axios";
 
-export const createOrder = (id) => async (dispatch) => {
+export const createOrder = (id) => async (dispatch, getState) => {
   console.log("Działam");
+
   try {
     dispatch({
       type: ORDER_CREATE_REQUEST,
     });
-    const authTokens = localStorage.setItem("authTokens", JSON.stringify(data));
-    const config = {
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const { data } = await axios.post(`/orders/create-order/${id}`, {
       headers: {
-        "Content-type": "application/json",
-        Authorization: "Bearer " + String(authTokens.access),
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.id}`,
       },
-    };
-    const { data } = await axios.post(`/orders/create-order/${id}`, config);
-    console.log("DATA IN ADD ORDER: ", data);
+      body: {
+        user: userInfo.id,
+      },
+    });
+
     dispatch({
       type: ORDER_CREATE_SUCCESS,
       payload: data,
@@ -132,6 +139,7 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
   const ordereDishExist = orderedDishes.filter(
     (el) => el.dish == filteredDish.id
   );
+  console.log("Ordered dish existed: ", ordereDishExist);
 
   if (ordereDishExist.length < 1) {
     console.log("OrderderDishesExist: ", ordereDishExist);
@@ -156,6 +164,7 @@ export const addToOrder = (filteredDish, id) => async (dispatch) => {
     };
 
     const { dishToAdd } = await axios.post(`/orders/add-dish-to-order`, config);
+    window.location.reload();
   }
   if (ordereDishExist.length > 0) {
     alert("Dish you want to add already exist in order. Try to increase qty");
