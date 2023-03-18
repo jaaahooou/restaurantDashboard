@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Room, Table, DishCategory, Dish, Order, OrderDish
+from .models import Room, Table, DishCategory, Dish, Order, OrderDish,Employee
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,6 +34,11 @@ class UserSerializerWithToken(UserSerializer):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
 
+
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Employee
+        fields='__all__'
 
 class DishCategorySerializer(serializers.ModelSerializer):
     class Meta:

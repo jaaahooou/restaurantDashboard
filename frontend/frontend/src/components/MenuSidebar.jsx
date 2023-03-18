@@ -102,6 +102,7 @@ const MenuSidebar = () => {
               icon={<FormatListNumberedIcon />}
               to="/orders"
             />
+            <Item title="Staff" icon={<PeopleOutlinedIcon />} to="/staff" />
             <Item
               title="Admin"
               icon={<AdminPanelSettingsIcon />}

@@ -5,7 +5,11 @@ import { dishListReducer, orderDishReducer } from "./reducers/dishReducers";
 import { categoriesListReducer } from "./reducers/categoriesReducers";
 import { orderListReducer, orderDetailReducer } from "./reducers/orderReducers";
 import { listTablesReducer, listRoomsReducer } from "./reducers/tablesReducers";
-import { userLoginReducer, userListReducer } from "./reducers/userReducers";
+import {
+  userLoginReducer,
+  userListReducer,
+  employeeListReducer,
+} from "./reducers/userReducers";
 
 const reducer = combineReducers({
   dishList: dishListReducer,
@@ -17,6 +21,7 @@ const reducer = combineReducers({
   roomsList: listRoomsReducer,
   userLogin: userLoginReducer,
   userList: userListReducer,
+  employeeList: employeeListReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

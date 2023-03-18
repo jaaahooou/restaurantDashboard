@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 
 import Paper from "@mui/material/Paper";
 import { experimentalStyled as styled } from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -76,7 +77,7 @@ export default function Tables() {
   };
 
   return loading ? (
-    <div>Loading</div>
+    <CircularProgress color="secondary" />
   ) : error ? (
     <div>Something went wrong</div>
   ) : (

@@ -6,6 +6,9 @@ import {
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
+  EMPLOYEE_LIST_REQUEST,
+  EMPLOYEE_LIST_SUCCESS,
+  EMPLOYEE_LIST_FAIL,
 } from "../constants/userConstants";
 import axios from "axios";
 
@@ -62,6 +65,29 @@ export const getUsers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getEmployees = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: EMPLOYEE_LIST_REQUEST,
+    });
+
+    const { data } = await axios.get("/user/employees/");
+
+    dispatch({
+      type: EMPLOYEE_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: EMPLOYEE_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

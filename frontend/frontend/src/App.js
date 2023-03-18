@@ -10,6 +10,7 @@ import Orders from "./screens/orders/index";
 import Admin from "./screens/admin";
 import Order from "./screens/order";
 import Login from "./screens/login";
+import Staff from "./screens/staff";
 
 import MenuSidebar from "./components/MenuSidebar";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
@@ -38,6 +39,7 @@ function App() {
               <Route path="/tables" element={<Tables />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="orders/order/:id" element={<Order />} />
+              <Route path="/staff" element={<Staff />} />
               <Route path="/admin-panel" element={<Admin />} />
               <Route path="/login" element={<Login />} />
             </Routes>

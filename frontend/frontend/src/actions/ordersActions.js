@@ -41,6 +41,8 @@ export const createOrder = (id) => async (dispatch, getState) => {
       type: ORDER_CREATE_SUCCESS,
       payload: data,
     });
+
+    window.location.reload();
   } catch (error) {
     dispatch({
       type: ORDER_CREATE_FAIL,

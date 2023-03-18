@@ -108,7 +108,7 @@ def getOrderedDishById(request,pk):
     orderedDish = OrderDish.objects.get(id=pk)
     dishes = Dish.objects.all()
     dishPrice = orderedDish.dish.price
-    print("Dish price: ",dishPrice)
+    
     
     serializer = OrderDishSerializer(orderedDish, many=False)
     return Response({
