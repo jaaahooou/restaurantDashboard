@@ -32,9 +32,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { LinkContainer } from "react-router-bootstrap";
-import { TablesComponent } from "../../components/adminComponents/TablesComponent";
-import { StaffComponent } from "../../components/adminComponents/StaffComponent";
-import { MenuComponent } from "../../components/adminComponents/MenuComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -56,53 +53,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function Admin() {
-  let location = useLocation();
-  let navigate = useNavigate();
-
+export const StaffComponent = () => {
   const dispatch = useDispatch();
 
-  const userList = useSelector((state) => state.userList);
-  const { error, loading, users } = userList;
-
-  const orderList = useSelector((state) => state.orderList);
-  const {
-    error: orderListError,
-    loading: orderListLoading,
-    orders,
-  } = orderList;
-
-  const tableList = useSelector((state) => state.tableList);
-  const {
-    error: tableListError,
-    loading: tableListLoading,
-    tables,
-  } = tableList;
-
-  const roomsList = useSelector((state) => state.roomsList);
-  const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
-
   const employeeList = useSelector((state) => state.employeeList);
-  const {
-    error: employeeListError,
-    loadng: employeeListLoading,
-    employees,
-  } = employeeList;
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-
-  const [roomName, setroomName] = React.useState("");
-  const handleChange = (event) => {
-    setroomName(event.target.value);
-  };
+  const { error, loading, employees } = employeeList;
 
   useEffect(() => {
     dispatch(getEmployees());
-    dispatch(getUsers());
-    dispatch(listOrders());
-    dispatch(listTables());
-    dispatch(listRooms());
   }, []);
 
   return loading ? (
@@ -110,10 +68,65 @@ export default function Admin() {
   ) : error ? (
     <div>Something went wrong</div>
   ) : (
-    <Box sx={{ margin: "20px" }}>
-      <StaffComponent />
-      <TablesComponent />
-      <MenuComponent />
-    </Box>
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography>Staff</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <TableContainer component={Paper}>
+          <Table aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell component="th">Waiter name</StyledTableCell>
+                <StyledTableCell align="center">Person id</StyledTableCell>
+                <StyledTableCell align="center">Position</StyledTableCell>
+                <StyledTableCell align="center">Delete</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {employees ? (
+                <>
+                  {employees.map((employee) => (
+                    <StyledTableRow key={employee.id}>
+                      <StyledTableCell component="th" scope="row">
+                        {employee.name}
+                      </StyledTableCell>
+                      <StyledTableCell component="th" align="center">
+                        {employee.id}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        component="th"
+                        style={{ cursor: "pointer" }}
+                        align="center"
+                      >
+                        {employee.position}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        component="th"
+                        style={{ cursor: "pointer" }}
+                        align="center"
+                      >
+                        <ClearIcon sx={{ color: "red" }} />
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </>
+              ) : (
+                <CircularProgress color="secondary" />
+              )}
+            </TableBody>
+            <TableBody>
+              <TableCell rowSpan={1} colSpan={4}>
+                <Button onClick={() => {}}>Add new person</Button>
+              </TableCell>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </AccordionDetails>
+    </Accordion>
   );
-}
+};

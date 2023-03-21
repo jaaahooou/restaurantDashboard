@@ -175,6 +175,7 @@ def removeDishFromOrder(request,pk):
 #@permission_classes([IsAuthenticated])
 def getOrders(request):
     orders = Order.objects.all()
+    print(orders)
  
     serializer= OrderSerializer(orders, many=True)
     return Response(serializer.data)

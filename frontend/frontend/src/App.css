@@ -28,9 +28,19 @@
   color: #61dafb;
 }
 
-/* .css-i9gxme {
-  margin: 0;
-} */
+.css-dip3t8 {
+  min-height: 100vh;
+}
+
+.ps-sidebar-root {
+  height: 100%;
+  min-height: 100vh;
+}
+
+.css-1dabzo2 {
+  height: 100%;
+  min-height: 100vh;
+}
 
 @keyframes App-logo-spin {
   from {

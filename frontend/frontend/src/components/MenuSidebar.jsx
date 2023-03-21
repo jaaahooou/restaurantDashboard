@@ -68,16 +68,16 @@ const MenuSidebar = () => {
         <Sidebar
           breakPoint="md"
           transitionDuration={800}
-          style={{ height: "100vh" }}
+          style={{ height: "100%", minHeight: "100vh" }}
         >
           <Menu>
             <MenuItem
+              style={{ textAlign: "center" }}
               icon={<MenuOutlinedIcon />}
               onClick={() => {
                 collapseSidebar();
                 setIsCollapsed(!isCollapsed);
               }}
-              style={{ textAlign: "center" }}
             >
               {userInfo && `Welcome ${userInfo.first_name}`}
             </MenuItem>

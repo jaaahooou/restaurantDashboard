@@ -72,7 +72,6 @@ export default function Tables() {
   }, []);
 
   const addOrderHandler = (id) => {
-    console.log("add handler: ", id);
     dispatch(createOrder(id));
   };
 

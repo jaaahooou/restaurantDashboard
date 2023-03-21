@@ -1,7 +1,8 @@
 import * as React from "react";
 
 import { listTables, listRooms } from "../../actions/tablesActions";
-import { getUsers } from "../../actions/userActions";
+import { getUsers, getEmployees } from "../../actions/userActions";
+import { listOrders } from "../../actions/ordersActions";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,8 +19,8 @@ import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
 import CircularProgress from "@mui/material/CircularProgress";
 import "@fontsource/public-sans";
-
-import { listOrders } from "../../actions/ordersActions";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,29 +48,25 @@ export default function Staff() {
 
   const dispatch = useDispatch();
 
-  const orderList = useSelector((state) => state.orderList);
-  const { error, loading, orders } = orderList;
-
   const userList = useSelector((state) => state.userList);
-  const { error: userListError, loading: userListloading, users } = userList;
+  const { error, loading, users } = userList;
   //const { error, loading, users } = userList;
-
-  const tableList = useSelector((state) => state.tableList);
-  const {
-    error: tableListError,
-    loading: tableListLoading,
-    tables,
-  } = tableList;
 
   const roomsList = useSelector((state) => state.roomsList);
   const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
 
+  const employeeList = useSelector((state) => state.employeeList);
+  const {
+    error: employeeListError,
+    loadng: employeeListLoading,
+    employees,
+  } = employeeList;
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  console.log("USERS IN COMP: ", users);
-
   useEffect(() => {
+    dispatch(getEmployees());
     dispatch(getUsers());
     dispatch(listOrders());
     dispatch(listTables());
@@ -87,51 +84,31 @@ export default function Staff() {
           <TableHead>
             <TableRow>
               <StyledTableCell>Waiter name</StyledTableCell>
-              <StyledTableCell align="center">Waiter id</StyledTableCell>
-              <StyledTableCell align="center">Waiter/Waitress</StyledTableCell>
+              <StyledTableCell align="center">Person id</StyledTableCell>
+              <StyledTableCell align="center">Position</StyledTableCell>
 
-              <StyledTableCell align="center">Details</StyledTableCell>
+              <StyledTableCell align="center">In work</StyledTableCell>
             </TableRow>
           </TableHead>
-          {users ? (
+          {employees ? (
             <TableBody>
-              {users.map((user) => (
-                <StyledTableRow key={user.id}>
+              {employees.map((employee) => (
+                <StyledTableRow key={employee.id}>
                   <StyledTableCell component="th" scope="row">
-                    {user.first_name}
+                    {employee.name}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    {user.id}
-                    {/* {tables
-                  .filter((table) => table.id == order.table)
-                  .map((filteredTable) => (
-                    <div key={filteredTable.id}>
-                      {" "}
-                      {rooms
-                        .filter((room) => room.id == filteredTable.room)
-                        .map((filteredRoom) => (
-                          <div key={filteredRoom.id}>{filteredRoom.name}</div>
-                        ))}
-                    </div>
-                  ))} */}
+                    {employee.id}
                   </StyledTableCell>
-                  {/* {users ? (
-                <StyledTableCell align="center">
-                  {" "}
-                  {users
-                    .filter((user) => user.id == order.user)
-                    .map((filteredUsers) => (
-                      <div key={filteredUsers.id}>
-                        {filteredUsers.first_name}
-                      </div>
-                    ))}
-                </StyledTableCell>
-              ) : (
-                <div>name</div>
-              )} */}
-
                   <StyledTableCell style={{ cursor: "pointer" }} align="center">
-                    {user.username}
+                    {employee.position}
+                  </StyledTableCell>
+                  <StyledTableCell style={{ cursor: "pointer" }} align="center">
+                    {employee.isActive ? (
+                      <CheckIcon sx={{ color: "green" }} />
+                    ) : (
+                      <ClearIcon sx={{ color: "red" }} />
+                    )}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
