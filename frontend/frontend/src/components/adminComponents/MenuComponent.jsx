@@ -2,12 +2,11 @@ import * as React from "react";
 
 import { useState } from "react";
 
-import { listTables, listRooms } from "../../actions/tablesActions";
-import { getUsers, getEmployees } from "../../actions/userActions";
-import { listOrders } from "../../actions/ordersActions";
+
 import { listDishes } from "../../actions/dishActions";
 import { listCategories } from "../../actions/categoriesActions";
 import { addDishToMenu } from "../../actions/dishActions";
+import {removeDishFromMenu} from "../../actions/dishActions"
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,7 +73,7 @@ export const MenuComponent = () => {
   const { categoriesError, categoriesLoading, categories } = categoriesList;
 
   const [dishName, setDishName] = useState("");
-  const [dishPrice, setDishPrice] = useState("");
+  let [dishPrice, setDishPrice] = useState("");
 
   const [openNewDish, setOpenNewDish] = useState(false);
 
@@ -84,23 +83,32 @@ export const MenuComponent = () => {
   }, []);
 
   const submitHandler = (category) => {
-    console.log("Dish type: ", typeof dishPrice);
-    if (typeof dishPrice != "number") {
-      alert("Dish price must be a number");
-    }
 
-    if (typeof dishPrice == "number") {
-      if (dishPrice > 0) {
+    try{
+      dishPrice = Number(dishPrice)
+      if(dishPrice>0){
         dispatch(addDishToMenu(category, dishName, dishPrice));
-      } else {
-        alert("Dish price must be greater the 0");
       }
+      else if(dishPrice<0){
+        alert("Dish price must be greater then zero")
+
+      }else{
+        alert("Dish price must be a number")
+      }
+
+
+    }catch(error){
+      console.log(error);
+      alert("error")
     }
-    // console.log(dishName);
-    // console.log(dishPrice);
-    // dispatch(addDishToMenu(category, dishName, dishPrice));
-    // console.log(category);
+   
   };
+
+
+  const removeDishHandler = (id) =>{
+ 
+    dispatch(removeDishFromMenu(id))
+  }
   return loading ? (
     <CircularProgress color="secondary" />
   ) : error ? (
@@ -140,6 +148,7 @@ export const MenuComponent = () => {
                             <StyledTableCell align="right">
                               Price
                             </StyledTableCell>
+                            <StyledTableCell align="center">Remove</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -160,6 +169,11 @@ export const MenuComponent = () => {
 
                                 <TableCell align="right">
                                   {filtereDish.price}
+                                </TableCell>
+                                <TableCell align="center"  style={{ cursor: "pointer" }}>
+                                   <ClearIcon sx={{ color: "red" }} onClick={()=>{
+                                    removeDishHandler(filtereDish.id)
+                                   }}/>
                                 </TableCell>
                               </TableRow>
                             ))}
