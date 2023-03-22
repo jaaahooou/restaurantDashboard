@@ -31,7 +31,7 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
     switch (action.type) {
         case ORDER_ADD_ITEM:
             const item = action.payload;
-            console.log("Item: ", item.filteredDish);
+
 
             return {
                 ...state,

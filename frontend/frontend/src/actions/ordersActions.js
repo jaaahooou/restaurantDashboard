@@ -57,22 +57,6 @@ export const getOrderDetails = (id) => async(dispatch) => {
 export const addToOrder = (filteredDish, id) => async(dispatch) => {
     //filteredDish - dish we want to change
     //id - order id
-    //const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
-
-    //   let urls = [
-    //     `/dishes/get-order-dish/${filteredDish.id}`,
-    //     `/orders/get-order/${id}`,
-    //   ];
-
-    //   const requests = urls.map((url) => axios.get(url));
-
-    //  axios.all(requests).then((responses) => {
-    //     responses.forEach((resp) => {
-    //       console.log("DATA: ", resp);
-    //       return resp;
-    //     });
-    //   });
-    //   console.log(dupa);
 
     const { data } = await axios.get(`/dishes/get-order-dish/${filteredDish.id}`);
 

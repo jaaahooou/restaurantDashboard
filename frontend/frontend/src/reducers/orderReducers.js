@@ -5,10 +5,9 @@ import {
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
     ORDER_DETAILS_FAIL,
-    ORDER_ADD_ITEM,
-    ORDER_REMOVE_ITEM,
+
 } from "../constants/orderConstants";
-import axios from "axios";
+
 
 export const orderListReducer = (state = { orders: [] }, action) => {
     switch (action.type) {
