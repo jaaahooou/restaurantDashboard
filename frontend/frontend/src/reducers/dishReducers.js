@@ -5,6 +5,7 @@ import {
     ORDER_DISH_LIST_REQUEST,
     ORDER_DISH_LIST_SUCCESS,
     ORDER_DISH_LIST_FAIL,
+    ADD_DISH_TO_MENU,
 } from "../constants/dishConstants";
 import {
     ORDER_ADD_ITEM,
@@ -23,6 +24,24 @@ export const dishListReducer = (state = { dishes: [] }, action) => {
 
         case DISH_LIST_FAIL:
             return { loading: false, error: action.payload };
+
+            // =========== Add new dish to menu from admin panel ===========
+
+        case ADD_DISH_TO_MENU:
+            const data = action.payload
+            const itemToAddToMenu = {
+                category: data.category,
+                title: data.dishName,
+                price: data.dishPrice,
+                countInStock: 100
+            }
+            console.log(state.dishes)
+            console.log("Item to add: ", itemToAddToMenu)
+            return {
+                ...state,
+                dishes: [...state.dishes, itemToAddToMenu]
+
+            }
         default:
             return state;
     }
@@ -50,8 +69,7 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
             return {
                 ...state,
                 orderDishes: state.orderDishes.map((x) =>
-                    x.id == item.filteredDish.id ?
-                    {...item.filteredDish, qty: item.filteredDish.qty + 1 } :
+                    x.id == item.filteredDish.id ? {...item.filteredDish, qty: item.filteredDish.qty + 1 } :
                     x
                 ),
             };
@@ -61,12 +79,10 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
             return {
                 ...state,
                 orderDishes: state.orderDishes.map((x) =>
-                    x.id == itemToRemove.filteredDish.id ?
-                    {
+                    x.id == itemToRemove.filteredDish.id ? {
                         ...itemToRemove.filteredDish,
                         qty: itemToRemove.filteredDish.qty > 1 ?
-                            itemToRemove.filteredDish.qty - 1 :
-                            itemToRemove.filteredDish.qty,
+                            itemToRemove.filteredDish.qty - 1 : itemToRemove.filteredDish.qty,
                     } :
                     x
                 ),
