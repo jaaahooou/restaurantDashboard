@@ -55,6 +55,11 @@ export const addDishToMenu =
         try {
             dispatch({
                 type: ADD_DISH_TO_MENU_REQUEST,
+                payload: {
+                    category,
+                    dishName,
+                    dishPrice
+                }
             });
 
             const config = {
@@ -90,9 +95,11 @@ export const removeDishFromMenu = (id) => async(dispatch) => {
 
     };
 
-    const { removedDish } = await axios.post(
+    const { removedDish } = await axios.delete(
         `/dishes/remove-dish/${id}`,
         config
     );
+
+    window.location.reload()
 
 }
