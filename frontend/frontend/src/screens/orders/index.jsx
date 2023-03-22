@@ -69,8 +69,6 @@ export default function CustomizedTables() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  console.log("USERS IN COMP: ", users);
-
   useEffect(() => {
     dispatch(getUsers());
     dispatch(listOrders());

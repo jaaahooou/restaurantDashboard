@@ -99,6 +99,7 @@ export const TablesComponent = () => {
                 <StyledTableCell align="center">remove</StyledTableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {tables.map((table) => (
                 <StyledTableRow key={table.id}>

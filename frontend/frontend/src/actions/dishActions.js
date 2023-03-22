@@ -7,6 +7,9 @@ import {
   ORDER_DISH_LIST_REQUEST,
   ORDER_DISH_LIST_SUCCESS,
   ORDER_DISH_LIST_FAIL,
+  ADD_DISH_TO_MENU_REQUEST,
+  ADD_DISH_TO_MENU_SUCCESS,
+  ADD_DISH_TO_MENU_FAIL,
 } from "../constants/dishConstants";
 
 export const listDishes = () => async (dispatch) => {
@@ -49,3 +52,34 @@ export const listOrderDishes = (id) => async (dispatch) => {
     });
   }
 };
+
+export const addDishToMenu =
+  (category, dishName, dishPrice) => async (dispatch) => {
+    console.log(category, dishName, dishPrice);
+    try {
+      dispatch({
+        type: ADD_DISH_TO_MENU_REQUEST,
+      });
+
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: {
+          category: category,
+          title: dishName,
+          price: dishPrice,
+        },
+      };
+      const { data } = await axios.post("/dishes/add-dish", config);
+      window.location.reload();
+    } catch (error) {
+      dispatch({
+        type: ADD_DISH_TO_MENU_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

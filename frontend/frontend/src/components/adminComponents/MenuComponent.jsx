@@ -7,6 +7,7 @@ import { getUsers, getEmployees } from "../../actions/userActions";
 import { listOrders } from "../../actions/ordersActions";
 import { listDishes } from "../../actions/dishActions";
 import { listCategories } from "../../actions/categoriesActions";
+import { addDishToMenu } from "../../actions/dishActions";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,14 +76,30 @@ export const MenuComponent = () => {
   const [dishName, setDishName] = useState("");
   const [dishPrice, setDishPrice] = useState("");
 
+  const [openNewDish, setOpenNewDish] = useState(false);
+
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listCategories());
   }, []);
 
-  const submitHandler = () => {
-    console.log(dishName);
-    console.log(dishPrice);
+  const submitHandler = (category) => {
+    console.log("Dish type: ", typeof dishPrice);
+    if (typeof dishPrice != "number") {
+      alert("Dish price must be a number");
+    }
+
+    if (typeof dishPrice == "number") {
+      if (dishPrice > 0) {
+        dispatch(addDishToMenu(category, dishName, dishPrice));
+      } else {
+        alert("Dish price must be greater the 0");
+      }
+    }
+    // console.log(dishName);
+    // console.log(dishPrice);
+    // dispatch(addDishToMenu(category, dishName, dishPrice));
+    // console.log(category);
   };
   return loading ? (
     <CircularProgress color="secondary" />
@@ -147,50 +164,71 @@ export const MenuComponent = () => {
                               </TableRow>
                             ))}
                         </TableBody>
+
                         <TableBody>
                           <TableCell rowSpan={1} colSpan={4}>
-                            <Button onClick={() => {}}>Add new dish</Button>
+                            {openNewDish ? (
+                              <Button
+                                onClick={() => {
+                                  setOpenNewDish(!openNewDish);
+                                }}
+                              >
+                                close
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => {
+                                  setOpenNewDish(!openNewDish);
+                                }}
+                              >
+                                Add new dish
+                              </Button>
+                            )}
                           </TableCell>
                         </TableBody>
                       </Table>
                     </TableContainer>
-                    <Box sx={{ marginTop: "10px" }}>
-                      <FormControl sx={{ marginTop: "10px" }}>
-                        <InputLabel htmlFor="component-outlined">
-                          Name
-                        </InputLabel>
-                        <OutlinedInput
-                          id="component-outlined"
-                          defaultValue="Enter dish name"
-                          label="Dish-name"
-                          onChange={(e) => {
-                            setDishName(e.target.value);
-                          }}
-                        />
-                      </FormControl>
+                    {openNewDish ? (
+                      <Box sx={{ marginTop: "10px" }}>
+                        <FormControl sx={{ marginTop: "10px" }}>
+                          <InputLabel htmlFor="component-outlined">
+                            Name
+                          </InputLabel>
+                          <OutlinedInput
+                            id="component-outlined"
+                            defaultValue="Enter dish name"
+                            label="Dish-name"
+                            onChange={(e) => {
+                              setDishName(e.target.value);
+                            }}
+                          />
+                        </FormControl>
 
-                      <FormControl sx={{ marginTop: "10px" }}>
-                        <InputLabel htmlFor="component-outlined">
-                          Price
-                        </InputLabel>
-                        <OutlinedInput
-                          id="component-outlined"
-                          defaultValue="Price"
-                          label="Dish-price"
-                          onChange={(e) => {
-                            setDishPrice(e.target.value);
+                        <FormControl sx={{ marginTop: "10px" }}>
+                          <InputLabel htmlFor="component-outlined">
+                            Price
+                          </InputLabel>
+                          <OutlinedInput
+                            id="component-outlined"
+                            defaultValue="Price"
+                            label="Dish-price"
+                            onChange={(e) => {
+                              setDishPrice(e.target.value);
+                            }}
+                          />
+                        </FormControl>
+                        <Button
+                          sx={{ marginTop: "10px", height: "56px" }}
+                          onClick={() => {
+                            submitHandler(category.title);
                           }}
-                        />
-                      </FormControl>
-                      <Button
-                        sx={{ marginTop: "10px", height: "56px" }}
-                        onClick={() => {
-                          submitHandler();
-                        }}
-                      >
-                        Add
-                      </Button>
-                    </Box>
+                        >
+                          Add
+                        </Button>
+                      </Box>
+                    ) : (
+                      <></>
+                    )}
                   </AccordionDetails>
                 ) : (
                   <CircularProgress color="secondary" />

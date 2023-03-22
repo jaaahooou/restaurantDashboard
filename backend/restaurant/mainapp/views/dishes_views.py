@@ -63,8 +63,10 @@ def deleteDishCategory(request,pk):
 #@permission_classes([IsAdminUser])
 def addDishToMenu(request):
     data = request.data
-    dishTitle = data['title']
-    dishCategory = data['category']
+    print(data)
+    dishTitle = data['body']['title']
+    dishCategory = data['body']['category']
+    dishPrice = data['body']['price']
    #check if dish category exist
     if DishCategory.objects.filter(title=str(dishCategory)).count()<=0:
         return Response("Category doesn`t exist")
@@ -76,9 +78,9 @@ def addDishToMenu(request):
         DishCategory.objects.get(title=dishCategory)
         dishToAdd = Dish.objects.create(
             category = DishCategory.objects.get(title=dishCategory),
-            title = data['title'],
-            price = data['price'],
-            countInStock = data['countInStock']
+            title = dishTitle,
+            price = dishPrice,
+            countInStock = 100
         )
         serializer = DishSerializer(dishToAdd, many=False)
         return Response(serializer.data)

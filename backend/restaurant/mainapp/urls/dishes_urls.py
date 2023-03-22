@@ -9,6 +9,7 @@ urlpatterns = [
     path('get-dishes', views.getAllDishes, name='get-dishes'),
     path('get-order-dishes', views.getOrderDish, name='get-order-dishes'),
    
+   
     
     path('remove-dish/<str:pk>', views.deleteDishFromMenu, name='remove-dish'),
     path('delete-category/<str:pk>', views.deleteDishCategory, name='delete-category'),
