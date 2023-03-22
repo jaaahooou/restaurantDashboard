@@ -56,64 +56,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function Admin() {
-  let location = useLocation();
-  let navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
-  const userList = useSelector((state) => state.userList);
-  const { error, loading, users } = userList;
-
-  const orderList = useSelector((state) => state.orderList);
-  const {
-    error: orderListError,
-    loading: orderListLoading,
-    orders,
-  } = orderList;
-
-  const tableList = useSelector((state) => state.tableList);
-  const {
-    error: tableListError,
-    loading: tableListLoading,
-    tables,
-  } = tableList;
-
-  const roomsList = useSelector((state) => state.roomsList);
-  const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
-
-  const employeeList = useSelector((state) => state.employeeList);
-  const {
-    error: employeeListError,
-    loadng: employeeListLoading,
-    employees,
-  } = employeeList;
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-
-  const [roomName, setroomName] = React.useState("");
-  const handleChange = (event) => {
-    setroomName(event.target.value);
-  };
-
-  useEffect(() => {
-    dispatch(getEmployees());
-    dispatch(getUsers());
-    dispatch(listOrders());
-    dispatch(listTables());
-    dispatch(listRooms());
-  }, []);
-
+export const RoomsComponent = () => {
   return loading ? (
     <CircularProgress color="secondary" />
   ) : error ? (
     <div>Something went wrong</div>
   ) : (
-    <Box sx={{ margin: "20px" }}>
-      <StaffComponent />
-      <TablesComponent />
-      <MenuComponent />
-    </Box>
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography>Menu</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
   );
-}
+};

@@ -5,7 +5,9 @@ import {
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
     ORDER_DETAILS_FAIL,
-
+    ORDER_ADD_ITEM,
+    ORDER_REMOVE_ITEM,
+    ORDER_DELETE_ITEM,
 } from "../constants/orderConstants";
 
 
@@ -30,12 +32,10 @@ export const orderListReducer = (state = { orders: [] }, action) => {
     }
 };
 
-export const orderDetailReducer = async(
+export const orderDetailReducer = (
     state = { loading: true, order: [] },
     action
 ) => {
-
-
     switch (action.type) {
         case ORDER_DETAILS_REQUEST:
             return {
@@ -43,7 +43,6 @@ export const orderDetailReducer = async(
                 loading: true,
             };
         case ORDER_DETAILS_SUCCESS:
-            console.log(action.payload)
             return {
                 loading: false,
                 order: action.payload,
@@ -53,8 +52,6 @@ export const orderDetailReducer = async(
                 loading: false,
                 order: action.payload,
             };
-
-
 
         default:
             return state;

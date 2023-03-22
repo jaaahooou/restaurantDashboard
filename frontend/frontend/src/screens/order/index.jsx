@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 
 import { listOrderDishes } from "../../actions/dishActions";
@@ -11,7 +10,9 @@ import {
   addToOrder,
   removeFromOrder,
   deleteFromOrder,
+  increaseDishQty,
 } from "../../actions/ordersActions";
+import { listCategories } from "../../actions/categoriesActions";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -19,18 +20,21 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+
+import { Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { styled } from "@mui/material/styles";
 
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-import { Box } from "@mui/system";
-
-import { styled } from "@mui/material/styles";
-
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
+import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -57,18 +61,41 @@ export default function Order() {
   const dishList = useSelector((state) => state.dishList);
   const { error: dishListError, loading: dishListloading, dishes } = dishList;
 
-  const [users, setUsers] = useState([]);
+  const categoriesList = useSelector((state) => state.categoriesList);
+  const { categoriesError, categoriesLoading, categories } = categoriesList;
+
   const [isPaid, setIsPaid] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
 
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listOrderDishes(id));
+    dispatch(listCategories());
 
     dispatch(getOrderDetails(id));
   }, [dispatch, id]);
 
-  const setOrderAsPaid = async () => {};
-  console.log(orderDetails)
+  const setOrderAsPaid = async () => {
+    setIsPaid(!isPaid);
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        //Authorization: "Bearer " + String(authTokens.access),
+      },
+      body: {
+        isPaid: true,
+      },
+    };
+
+    const { setOrderAsPaid } = await axios.post(
+      `/orders/update-order/${id}`,
+      config
+    );
+  };
+  const openAndCloseMenu = async () => {
+    setOpenMenu(!openMenu);
+  };
 
   return loading ? (
     <div>Loading</div>
@@ -83,14 +110,15 @@ export default function Order() {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           sx={{ marginBottom: "10px" }}
         >
-          {/* <Item>Payment method :{orderDetails.order.paymentMethod}</Item> */}
+          <Item>Payment method :{orderDetails.order.paymentMethod}</Item>
           <Item
             onClick={() => {
-              setOrderAsPaid();
+              setOrderAsPaid(id);
             }}
           >
             {isPaid ? "Is paid" : "Set as paid"}
           </Item>
+          <Item>{orderDetails.order.isPaid ? "is paid" : "not paid"}</Item>
         </Stack>
       </Box>
       <TableContainer component={Paper}>
@@ -129,8 +157,7 @@ export default function Order() {
                   <IconButton
                     aria-label="add"
                     onClick={() => {
-                      dispatch(addToOrder(filteredDish, id));
-                      dispatch(getOrderDetails(id));
+                      dispatch(increaseDishQty(filteredDish, id));
                     }}
                   >
                     <AddIcon />
@@ -143,14 +170,13 @@ export default function Order() {
                       <RemoveIcon
                         onClick={() => {
                           dispatch(removeFromOrder(filteredDish, id));
-                          dispatch(getOrderDetails(id));
                         }}
                       />
                     ) : (
                       <DeleteOutlineIcon
                         onClick={() => {
                           dispatch(deleteFromOrder(filteredDish, id));
-                          dispatch(getOrderDetails(id));
+                          dispatch(listOrderDishes(id));
                         }}
                       />
                     )}
@@ -182,25 +208,108 @@ export default function Order() {
                       </div>
                     ))}
                 </TableCell>
-                
               </TableRow>
-
-
-
-              
             ))}
 
             <TableRow>
+              <TableCell rowSpan={1} colSpan={4}>
+                <Button
+                  onClick={() => {
+                    openAndCloseMenu();
+                  }}
+                >
+                  {openMenu ? "Close menu" : "Add new dish"}
+                </Button>
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
               <TableCell rowSpan={3} />
-              <TableCell colSpan={2}>Total</TableCell>
+
+              <TableCell colSpan={1}>Total</TableCell>
+              <TableCell>
+                <Button
+                  onClick={() => {
+                    dispatch(getOrderDetails(id));
+                    dispatch(listOrderDishes(id));
+                  }}
+                >
+                  recalculate
+                </Button>
+              </TableCell>
+
               <TableCell align="right">
-                
-                {/* {orderDetails.order.totalPrice} */}
+                {orderDetails.order.totalPrice}
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
+      {/* This menu opens after the user clicks on the "add new dish" button */}
+      {openMenu ? (
+        <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
+          <Grid
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 1, sm: 8, md: 12 }}
+          >
+            {categories.map((category) => (
+              <Grid item xs={1} sm={4} md={4} key={category.id}>
+                <Item>
+                  <Typography variant="h4" align="left">
+                    {category.title}
+                  </Typography>
+
+                  <TableContainer component={Paper}>
+                    <Table sx={{ maxWidth: "100%" }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell align="right">Price</TableCell>
+                          <TableCell align="right"></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {dishes
+                          .filter((dish) => dish.category === category.id)
+                          .map((filtereDish) => (
+                            <TableRow
+                              key={filtereDish.id}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <TableCell component="th" scope="row">
+                                {filtereDish.title}
+                              </TableCell>
+
+                              <TableCell align="right">
+                                {filtereDish.price}
+                              </TableCell>
+                              <TableCell align="right">
+                                <Button
+                                  onClick={() => {
+                                    dispatch(addToOrder(filtereDish, id));
+                                  }}
+                                >
+                                  <AddIcon />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Item>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 }

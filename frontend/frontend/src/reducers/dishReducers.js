@@ -10,6 +10,7 @@ import {
     ORDER_ADD_ITEM,
     ORDER_REMOVE_ITEM,
     ORDER_DELETE_ITEM,
+    ORDER_ADD_NEW_ITEM,
 } from "../constants/orderConstants";
 
 export const dishListReducer = (state = { dishes: [] }, action) => {
@@ -29,14 +30,28 @@ export const dishListReducer = (state = { dishes: [] }, action) => {
 
 export const orderDishReducer = (state = { orderDishes: [] }, action) => {
     switch (action.type) {
+        case ORDER_ADD_NEW_ITEM:
+            const data = action.payload;
+
+            const itemToAddToOrder = {
+                order: data.id,
+                dish: data.filteredDish.id,
+                qty: 1,
+            };
+
+            return {
+                ...state,
+                orderDishes: [...state.orderDishes, itemToAddToOrder],
+            };
+
         case ORDER_ADD_ITEM:
             const item = action.payload;
-
 
             return {
                 ...state,
                 orderDishes: state.orderDishes.map((x) =>
-                    x.id == item.filteredDish.id ? {...item.filteredDish, qty: item.filteredDish.qty + 1 } :
+                    x.id == item.filteredDish.id ?
+                    {...item.filteredDish, qty: item.filteredDish.qty + 1 } :
                     x
                 ),
             };
@@ -46,10 +61,12 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
             return {
                 ...state,
                 orderDishes: state.orderDishes.map((x) =>
-                    x.id == itemToRemove.filteredDish.id ? {
+                    x.id == itemToRemove.filteredDish.id ?
+                    {
                         ...itemToRemove.filteredDish,
                         qty: itemToRemove.filteredDish.qty > 1 ?
-                            itemToRemove.filteredDish.qty - 1 : itemToRemove.filteredDish.qty,
+                            itemToRemove.filteredDish.qty - 1 :
+                            itemToRemove.filteredDish.qty,
                     } :
                     x
                 ),
@@ -57,11 +74,10 @@ export const orderDishReducer = (state = { orderDishes: [] }, action) => {
 
         case ORDER_DELETE_ITEM:
             const itemToDelete = action.payload.data;
-
             return {
                 ...state,
                 orderDishes: state.orderDishes.filter(
-                    (dishToDelete) => dishToDelete.id !== itemToDelete.id
+                    (dishToDelete) => dishToDelete.id !== itemToDelete.orderedDishData.id
                 ),
             };
 

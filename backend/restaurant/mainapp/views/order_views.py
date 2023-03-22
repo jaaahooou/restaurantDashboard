@@ -3,6 +3,8 @@ from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
 from mainapp.serializers import User,UserSerializer, RoomSerializer, TableSerializer, OrderSerializer,OrderDishSerializer 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 
@@ -12,15 +14,22 @@ from rest_framework.decorators import api_view,permission_classes
 def createOrder(request,pk):
     data = request.data
     user = request.user
+    print("USER: ",data['body']["user"])
+
+    user = User.objects.get(id=data['body']["user"])
+    print(user)
+
     # get table for order, each order is assigned to table
     table = Table.objects.get(id=pk)
     if table.isOccupied == False:
                   
         order = Order.objects.create(
-            user = request.user,
+            user = user,
             table = table
         )
+        print(order)
     else:
+        print("dupa")
         return Response('Table is occupied')
 
     #swicth table.isOccupied to True, no one else can make an order assigned this table
@@ -44,23 +53,25 @@ def getOrderById(request,pk):
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def updateOrder(request,pk):
-    print('start')
+   
     data= request.data
-    print(data)
+   
     order = Order.objects.get(id=pk)
     user = request.user
     table = order.table
       
-    if user == order.user:
+    
        
-        table.isOccupied = data['isOccupied']
-        table.save()
-        order.isPaid = data['isPaid']
-        order.save()
+    table.isOccupied = False
+    table.save()
+    order.isPaid = data['body']['isPaid']
+    
+    print( order.isPaid)
+    order.delete()
         
-        return Response("Order updated")
+       
 
-    return Response("You have no permission to do that!")
+    return Response("Order updated")
 
 
 
@@ -68,31 +79,42 @@ def updateOrder(request,pk):
 
 @api_view(['POST'])
 #@permission_classes([IsAuthenticated])
-def addDishToOrder(request,pk):
+def addDishToOrder(request):
     data=request.data 
-    user = request.user
-   
-    table = data['table_id']
-    qty = data['qty']
-    dishToAdd = Dish.objects.get(id=pk)
-    order = Order.objects.get(table=table)
-    print(order.user)
-    if user == order.user:
-        if(dishToAdd):
-            print("dish exist")
-        
-        dishToOrder = OrderDish.objects.create(
-            dish=dishToAdd,
-            order = order,
-            qty=qty
+    user = request.user  
+    print(data)
+
+  
+    
+    order = Order.objects.get(id=data['body']['order'])      
+    dish = Dish.objects.get(id=data['body']['dish'])
+    qty = int(data['body']['qty'])
+
+    print
+
+    orderedDishes = OrderDish.objects.filter(order=order)
+    print(orderedDishes)
+
+    
+    existOrderDish = orderedDishes.filter(dish=dish)
+    print("ExisteOrderDis: ",len(existOrderDish))
+    if len(existOrderDish)>0:
+        print("Dish exist, try to increase qty")
+        return Response("Dish exist, try to increase qty")
+           
+    dishToOrder = OrderDish.objects.create(
+        dish=dish,
+        order = order,
+        qty=qty,
+
         )
 
-        order.totalPrice = float(order.totalPrice) + float(dishToAdd.price)* float(dishToOrder.qty)
-        order.save()
+    order.totalPrice = float(order.totalPrice) + float(data['body']['price'])
+    order.save()
       
-        serializer = OrderDishSerializer(dishToOrder, many=False)
-        return Response(serializer.data)
-    return Response("You have no permission to do that!")
+    serializer = OrderDishSerializer(dishToOrder, many=False)
+    return Response(serializer.data)
+
 
 
 
@@ -101,6 +123,9 @@ def addDishToOrder(request,pk):
 def changeDishQty(request,pk):
     
     data = request.data
+    user= request.user
+    print(request.headers)
+    print("USER: ", user)
     
     if request.method == "POST":
        
@@ -150,6 +175,7 @@ def removeDishFromOrder(request,pk):
 #@permission_classes([IsAuthenticated])
 def getOrders(request):
     orders = Order.objects.all()
+    print(orders)
  
     serializer= OrderSerializer(orders, many=True)
     return Response(serializer.data)

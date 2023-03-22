@@ -1,12 +1,12 @@
 import * as React from "react";
-import AuthContext from "../../context/AuthContext";
-import OrderContext from "../../context/OrderContext";
-import UserContext from "../../context/UserContext";
-import TablesContext from "../../context/TablesContext";
-import RoomsContext from "../../context/RoomsContext";
 
-import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import { listTables, listRooms } from "../../actions/tablesActions";
+import { getUsers } from "../../actions/userActions";
+
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -18,8 +18,10 @@ import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
 import Button from "@mui/material/Button";
 import { LinkContainer } from "react-router-bootstrap";
-
 import "@fontsource/public-sans";
+import CircularProgress from "@mui/material/CircularProgress";
+
+import { listOrders } from "../../actions/ordersActions";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,12 +44,43 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function CustomizedTables() {
-  let { orders } = useContext(OrderContext);
-  let { users } = useContext(UserContext);
-  let { tables } = useContext(TablesContext);
-  let { rooms } = useContext(RoomsContext);
+  let location = useLocation();
+  let navigate = useNavigate();
 
-  return (
+  const dispatch = useDispatch();
+
+  const orderList = useSelector((state) => state.orderList);
+  const { error, loading, orders } = orderList;
+
+  const userList = useSelector((state) => state.userList);
+  const { error: userListError, loading: userListloading, users } = userList;
+  //const { error, loading, users } = userList;
+
+  const tableList = useSelector((state) => state.tableList);
+  const {
+    error: tableListError,
+    loading: tableListLoading,
+    tables,
+  } = tableList;
+
+  const roomsList = useSelector((state) => state.roomsList);
+  const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  useEffect(() => {
+    dispatch(getUsers());
+    dispatch(listOrders());
+    dispatch(listTables());
+    dispatch(listRooms());
+  }, []);
+
+  return loading ? (
+    <CircularProgress color="secondary" />
+  ) : error ? (
+    <div>Something went wrong</div>
+  ) : (
     <Box sx={{ margin: "20px" }}>
       <TableContainer component={Paper}>
         <Table aria-label="customized table">
@@ -56,7 +89,7 @@ export default function CustomizedTables() {
               <StyledTableCell>Table no</StyledTableCell>
               <StyledTableCell align="center">Room</StyledTableCell>
               <StyledTableCell align="center">Waiter/Waitress</StyledTableCell>
-              <StyledTableCell align="center">price</StyledTableCell>
+
               <StyledTableCell align="center">Details</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -81,15 +114,21 @@ export default function CustomizedTables() {
                       </div>
                     ))}
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {" "}
-                  {users
-                    .filter((user) => user.id == order.user)
-                    .map((filteredUsers) => (
-                      <div key={filteredUsers.id}>{filteredUsers.username}</div>
-                    ))}
-                </StyledTableCell>
-                <StyledTableCell align="center">{order.price}</StyledTableCell>
+                {users ? (
+                  <StyledTableCell align="center">
+                    {" "}
+                    {users
+                      .filter((user) => user.id == order.user)
+                      .map((filteredUsers) => (
+                        <div key={filteredUsers.id}>
+                          {filteredUsers.first_name}
+                        </div>
+                      ))}
+                  </StyledTableCell>
+                ) : (
+                  <div>name</div>
+                )}
+
                 <StyledTableCell style={{ cursor: "pointer" }} align="center">
                   <LinkContainer
                     component="button"

@@ -1,29 +1,49 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { login } from "../../actions/userActions";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import AuthContext from "./../../context/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
 });
 
 export default function SignIn() {
-  let { loginUser } = useContext(AuthContext);
+  let location = useLocation();
+  let navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { error, loading, userInfo } = userLogin;
+
+  useEffect(() => {}, []);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    dispatch(login(email, password));
+    navigate("/");
+  };
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -43,15 +63,21 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={loginUser} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={submitHandler}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
               fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -63,6 +89,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

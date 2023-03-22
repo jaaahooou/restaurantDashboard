@@ -14,6 +14,7 @@ import { Typography } from "@mui/material";
 import { listDishes } from "../../actions/dishActions";
 import { listCategories } from "../../actions/categoriesActions";
 import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -34,7 +35,11 @@ export default function ResponsiveGrid() {
     dispatch(listCategories());
   }, []);
 
-  return (
+  return loading ? (
+    <CircularProgress color="secondary" />
+  ) : error ? (
+    <div>Something went wrong</div>
+  ) : (
     <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
       <Grid
         container

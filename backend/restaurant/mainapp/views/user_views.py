@@ -1,6 +1,6 @@
 from rest_framework import permissions
-from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish
-from mainapp.serializers import User,UserSerializer, RoomSerializer, TableSerializer
+from mainapp.models import Room, Table, DishCategory, Dish, Order, OrderDish,Employee
+from mainapp.serializers import User,UserSerializer, UserSerializerWithToken,EmployeeSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from django.contrib.auth.hashers import make_password
@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
@@ -18,23 +19,28 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
         
-        # ...
-
         return token
     
     def validate(self, attrs):
         data = super().validate(attrs)
-        data['username'] = self.user.username
-        data['email'] = self.user.email
+        serializer = UserSerializerWithToken(self.user).data
+        for k,v in serializer.items():
+            data[k]=v
         
-
         return data
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 @api_view(['GET'])
-#@permission_classes([IsAdminUser])
+def getUserProfile(request):
+    user= request.user
+    print(user)
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def getUsers(request):
     
     users = User.objects.all()
@@ -43,8 +49,16 @@ def getUsers(request):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+def get_employees(request):
+
+    employees = Employee.objects.all()
+    serializer = EmployeeSerializer(employees, many=True)
+
+    return Response(serializer.data)
+
+
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
 def createUser(request):
 
     try:
@@ -64,7 +78,6 @@ def createUser(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
 def getUserById(request,pk):
     user = User.objects.get(id=pk)
     serializer = UserSerializer(user, many=False)
@@ -74,7 +87,6 @@ def getUserById(request,pk):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAdminUser])
 def deleteUser(request,pk):
     userToDelete = User.objects.get(id=pk)
     if userToDelete.is_superuser:

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState } from "react";
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -18,7 +18,12 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import AuthContext from "./../context/AuthContext";
+
+import { useSelector } from "react-redux";
+
+import { logout } from "../actions/userActions";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const darkTheme = createTheme({
   palette: {
@@ -36,14 +41,26 @@ const Item = ({ title, to, icon }) => {
 };
 
 const MenuSidebar = () => {
-  let { user, logoutUser } = useContext(AuthContext);
+  let dispatch = useDispatch();
+  let navigate = useNavigate();
+  // let { user, logoutUser } = useContext(AuthContext);
+  const userLogin = useSelector((state) => state.userLogin);
+  const { error, loading, userInfo } = userLogin;
 
   const { collapseSidebar, toggled, toggleSidebar, collapsed, broken } =
     useProSidebar();
 
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const logoutUser = () => {
+    dispatch(logout());
+    window.location.reload();
+  };
 
-  return (
+  return loading ? (
+    <div>Loading</div>
+  ) : error ? (
+    <div>error</div>
+  ) : (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
 
@@ -51,18 +68,18 @@ const MenuSidebar = () => {
         <Sidebar
           breakPoint="md"
           transitionDuration={800}
-          style={{ height: "100vh" }}
+          style={{ height: "100%", minHeight: "100vh" }}
         >
           <Menu>
             <MenuItem
+              style={{ textAlign: "center" }}
               icon={<MenuOutlinedIcon />}
               onClick={() => {
                 collapseSidebar();
                 setIsCollapsed(!isCollapsed);
               }}
-              style={{ textAlign: "center" }}
             >
-              {user && `Welcome ${user.username}`}
+              {userInfo && `Welcome ${userInfo.first_name}`}
             </MenuItem>
 
             <Stack direction="row" spacing={2}>
@@ -91,10 +108,18 @@ const MenuSidebar = () => {
               icon={<AdminPanelSettingsIcon />}
               to="/admin-panel"
             />
-            {user ? (
-              <MenuItem onClick={logoutUser} icon={<LogoutIcon />}>
-                Logout
-              </MenuItem>
+
+            {userLogin.userInfo.id ? (
+              <Item
+                title="Logout"
+                icon={
+                  <LogoutIcon
+                    onClick={() => {
+                      logoutUser();
+                    }}
+                  />
+                }
+              />
             ) : (
               <Item title="Login" icon={<LoginIcon />} to="/login" />
             )}
