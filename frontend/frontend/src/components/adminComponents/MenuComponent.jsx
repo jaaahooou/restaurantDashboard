@@ -69,13 +69,13 @@ export const MenuComponent = () => {
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listCategories());
-  }, [dispatch]);
+  }, []);
 
-  const submitHandler = (category) => {
+  const submitHandler = (category,categoryId) => {
     try {
       dishPrice = Number(dishPrice);
       if (dishPrice > 0) {
-        dispatch(addDishToMenu(category, dishName, dishPrice));
+        dispatch(addDishToMenu(category,categoryId, dishName, dishPrice,dishes,categories));
       } else if (dishPrice < 0) {
         alert("Dish price must be greater then zero");
       } else {
@@ -127,7 +127,7 @@ export const MenuComponent = () => {
                             </StyledTableCell>
                           </TableRow>
                         </TableHead>
-                        <TableBody>
+                        {dishes? (     <TableBody>
                           {dishes
                             .filter((dish) => dish.category === category.id)
                             .map((filtereDish) => (
@@ -148,7 +148,8 @@ export const MenuComponent = () => {
                                 </TableCell>
                               </TableRow>
                             ))}
-                        </TableBody>
+                        </TableBody>):(<></>)}
+                   
 
                         <TableBody>
                           <TableCell rowSpan={1} colSpan={4}>
@@ -206,7 +207,7 @@ export const MenuComponent = () => {
                         <Button
                           sx={{ marginTop: "10px", height: "56px" }}
                           onClick={() => {
-                            submitHandler(category.title);
+                            submitHandler(category.title,category.id);
                           }}
                         >
                           Add

@@ -28,18 +28,19 @@ export const dishListReducer = (state = { dishes: [] }, action) => {
             // =========== Add new dish to menu from admin panel ===========
 
         case ADD_DISH_TO_MENU:
-            const data = action.payload
+
+            const dishesFromAction = action.payload.dishes
             const itemToAddToMenu = {
-                category: data.category,
-                title: data.dishName,
-                price: data.dishPrice,
+                id: action.payload.dishes.length + 1,
+                category: action.payload.dishData.category,
+                title: action.payload.dishData.title,
+                price: action.payload.dishData.price,
                 countInStock: 100
             }
-            console.log(state.dishes)
-            console.log("Item to add: ", itemToAddToMenu)
+
             return {
-                ...state,
-                dishes: [...state.dishes, itemToAddToMenu]
+                loading: false,
+                dishes: [...dishesFromAction, itemToAddToMenu]
 
             }
         default:

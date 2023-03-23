@@ -52,7 +52,7 @@ export const listRooms = () => async(dispatch) => {
 };
 
 export const createNewTable =
-    (room, numberOfPersons, tables, rooms) => async(dispatch, getState) => {
+    (room, numberOfPersons, tables, rooms) => async(dispatch) => {
         function findTableRoom(tableRoom) {
             return tableRoom.name === room;
         }
