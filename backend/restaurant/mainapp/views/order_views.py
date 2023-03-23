@@ -200,6 +200,15 @@ def getAllTables(request):
 @api_view(['POST'])
 def createTable(request):
     data = request.data 
-    print(data)
+    requestedRoom = Room.objects.filter(id=data['body']['tableData']['room']['id'])
+    tableNumber = data['body']['tableData']['tableNumber']
+    numberOfPersons = data['body']['tableData']['numberOfPersons']
+    isOccupied = data['body']['tableData']['isOccupied']
+    newTable = Table.objects.create(
+        room=requestedRoom[0],
+        tableNumber=tableNumber,
+        numberOfPersons=numberOfPersons,
+        isOccupied=isOccupied
+    )
 
     return Response("Table created")
