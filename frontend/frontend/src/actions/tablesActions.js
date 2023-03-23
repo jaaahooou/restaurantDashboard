@@ -68,10 +68,7 @@ export const createNewTable =
         });
 
         const tableRoomToSend = rooms.find(findTableRoom);
-        console.log("Room: ", roomObject);
-        console.log("tableArray: ", tableArray.length);
 
-        console.log(tables);
         const tableData = {
             room: tableRoomToSend,
             tableNumber: tableArray.length + 1,
@@ -83,6 +80,7 @@ export const createNewTable =
                 type: CREATE_NEW_TABLE,
                 payload: {
                     tableData,
+                    tables
 
                 },
             });
@@ -97,7 +95,7 @@ export const createNewTable =
                 },
             };
 
-            const { data } = await axios.post("orders/create-new-table", config);
+            //const { data } = await axios.post("orders/create-new-table", config);
         } catch (error) {
             dispatch({
                 type: CREATE_NEW_TABLE_FAIL,
@@ -106,7 +104,3 @@ export const createNewTable =
             });
         }
     };
-// room = models.ForeignKey(Room, on_delete=models.CASCADE)
-// tableNumber = models.IntegerField(null=False, blank=False)
-// numberOfPersons = models.IntegerField(null=False, blank=False, default =2)
-// isOccupied = models.BooleanField(null=False, blank=False, default=False)

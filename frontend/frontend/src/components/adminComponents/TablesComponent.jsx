@@ -125,7 +125,7 @@ export const TablesComponent = () => {
               </TableRow>
             </TableHead>
 
-            <TableBody>
+        {tables ? (    <TableBody>
               {tables.map((table) => (
                 <StyledTableRow key={table.id}>
                   <StyledTableCell component="th" scope="row">
@@ -150,7 +150,8 @@ export const TablesComponent = () => {
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
-            </TableBody>
+            </TableBody>): (<></>)}
+        
 
             <TableBody>
               <TableCell rowSpan={1} colSpan={4}>
