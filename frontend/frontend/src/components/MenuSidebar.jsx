@@ -43,7 +43,7 @@ const Item = ({ title, to, icon }) => {
 const MenuSidebar = () => {
   let dispatch = useDispatch();
   let navigate = useNavigate();
-  // let { user, logoutUser } = useContext(AuthContext);
+
   const userLogin = useSelector((state) => state.userLogin);
   const { error, loading, userInfo } = userLogin;
 
@@ -52,9 +52,12 @@ const MenuSidebar = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const logoutUser = () => {
+    console.log("dupa");
     dispatch(logout());
     window.location.reload();
   };
+
+  console.log(userInfo);
 
   return loading ? (
     <div>Loading</div>
@@ -110,16 +113,13 @@ const MenuSidebar = () => {
             />
 
             {userLogin.userInfo.id ? (
-              <Item
-                title="Logout"
-                icon={
-                  <LogoutIcon
-                    onClick={() => {
-                      logoutUser();
-                    }}
-                  />
-                }
-              />
+              <div
+                onClick={() => {
+                  logoutUser();
+                }}
+              >
+                <Item title="Logout" icon={<LogoutIcon />} />
+              </div>
             ) : (
               <Item title="Login" icon={<LoginIcon />} to="/login" />
             )}

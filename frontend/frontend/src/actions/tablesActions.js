@@ -5,6 +5,8 @@ import {
   ROOMS_LIST_REQUEST,
   ROOMS_LIST_SUCCESS,
   ROOMS_LIST_FAIL,
+  CREATE_NEW_TABLE,
+  CREATE_NEW_TABLE_FAIL,
 } from "../constants/tablesConstants";
 
 import axios from "axios";
@@ -52,3 +54,62 @@ export const listRooms = () => async (dispatch) => {
     });
   }
 };
+
+export const createNewTable =
+  (room, numberOfPersons, tables, rooms) => async (dispatch) => {
+    function findTableRoom(tableRoom) {
+      return tableRoom.name === room;
+    }
+
+    // Find table room
+    let roomObject = rooms.find(function (filteredRoom) {
+      return filteredRoom.name == room;
+    });
+
+    //table array is used to get number of next table
+    let tableArray = tables.filter(function (filteredTable) {
+      return filteredTable.room === roomObject.id;
+    });
+
+    const tableRoomToSend = rooms.find(findTableRoom);
+    console.log("Room: ", roomObject);
+    console.log("tableArray: ", tableArray.length);
+
+    console.log(tables);
+    try {
+      dispatch({
+        type: CREATE_NEW_TABLE,
+        payload: {
+          tableRoomToSend,
+          room,
+          numberOfPersons,
+        },
+      });
+
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: {
+          room: tableRoomToSend,
+          tableNumber: tableArray.length + 1,
+          numberOfPersons: numberOfPersons,
+          isOccupied: false,
+        },
+      };
+
+      const { data } = await axios.post("orders/create-new-table", config);
+    } catch (error) {
+      dispatch({
+        type: CREATE_NEW_TABLE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+// room = models.ForeignKey(Room, on_delete=models.CASCADE)
+// tableNumber = models.IntegerField(null=False, blank=False)
+// numberOfPersons = models.IntegerField(null=False, blank=False, default =2)
+// isOccupied = models.BooleanField(null=False, blank=False, default=False)

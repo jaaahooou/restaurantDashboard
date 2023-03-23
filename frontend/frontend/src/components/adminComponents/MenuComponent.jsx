@@ -2,15 +2,12 @@ import * as React from "react";
 
 import { useState } from "react";
 
-
 import { listDishes } from "../../actions/dishActions";
 import { listCategories } from "../../actions/categoriesActions";
 import { addDishToMenu } from "../../actions/dishActions";
-import {removeDishFromMenu} from "../../actions/dishActions"
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -30,18 +27,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "@fontsource/public-sans";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
-import AddIcon from "@mui/icons-material/Add";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { LinkContainer } from "react-router-bootstrap";
-import { TablesComponent } from "../../components/adminComponents/TablesComponent";
-import { StaffComponent } from "../../components/adminComponents/StaffComponent";
-import FilledInput from "@mui/material/FilledInput";
 
-import FormHelperText from "@mui/material/FormHelperText";
-import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+
+import FormControl from "@mui/material/FormControl";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 
@@ -80,35 +69,23 @@ export const MenuComponent = () => {
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listCategories());
-  }, []);
+  }, [dispatch]);
 
   const submitHandler = (category) => {
-
-    try{
-      dishPrice = Number(dishPrice)
-      if(dishPrice>0){
+    try {
+      dishPrice = Number(dishPrice);
+      if (dishPrice > 0) {
         dispatch(addDishToMenu(category, dishName, dishPrice));
+      } else if (dishPrice < 0) {
+        alert("Dish price must be greater then zero");
+      } else {
+        alert("Dish price must be a number");
       }
-      else if(dishPrice<0){
-        alert("Dish price must be greater then zero")
-
-      }else{
-        alert("Dish price must be a number")
-      }
-
-
-    }catch(error){
+    } catch (error) {
       console.log(error);
-      alert("error")
+      alert("error");
     }
-   
   };
-
-
-  const removeDishHandler = (id) =>{
- 
-    dispatch(removeDishFromMenu(id))
-  }
   return loading ? (
     <CircularProgress color="secondary" />
   ) : error ? (
@@ -148,7 +125,6 @@ export const MenuComponent = () => {
                             <StyledTableCell align="right">
                               Price
                             </StyledTableCell>
-                            <StyledTableCell align="center">Remove</StyledTableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -169,11 +145,6 @@ export const MenuComponent = () => {
 
                                 <TableCell align="right">
                                   {filtereDish.price}
-                                </TableCell>
-                                <TableCell align="center"  style={{ cursor: "pointer" }}>
-                                   <ClearIcon sx={{ color: "red" }} onClick={()=>{
-                                    removeDishHandler(filtereDish.id)
-                                   }}/>
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -202,6 +173,7 @@ export const MenuComponent = () => {
                         </TableBody>
                       </Table>
                     </TableContainer>
+
                     {openNewDish ? (
                       <Box sx={{ marginTop: "10px" }}>
                         <FormControl sx={{ marginTop: "10px" }}>

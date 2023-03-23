@@ -3,8 +3,9 @@ import * as React from "react";
 import { listTables, listRooms } from "../../actions/tablesActions";
 import { getUsers, getEmployees } from "../../actions/userActions";
 import { listOrders } from "../../actions/ordersActions";
+import { createNewTable } from "../../actions/tablesActions";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -26,12 +27,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "@fontsource/public-sans";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
-import AddIcon from "@mui/icons-material/Add";
 import InputLabel from "@mui/material/InputLabel";
+
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { LinkContainer } from "react-router-bootstrap";
+
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -69,6 +71,29 @@ export const TablesComponent = () => {
   const roomsList = useSelector((state) => state.roomsList);
   const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
 
+  const [openNewTable, setOpenNewTable] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
+  let [numberOfPersonsSet, setNumberOfPersonsSet] = useState("");
+  const [room, setRoom] = useState("");
+
+  const handleChange = (event) => {
+    setRoom(event.target.value);
+  };
+  const submitHandler = () => {
+    try {
+      numberOfPersonsSet = Number(numberOfPersonsSet);
+      if (numberOfPersonsSet > 0) {
+        dispatch(createNewTable(room, numberOfPersonsSet, tables, rooms));
+      } else if (numberOfPersonsSet < 0) {
+        alert("NUmber of persons must be greater then zero");
+      } else {
+        alert("Umber of persons must be a number");
+      }
+    } catch (error) {
+      alert("error");
+    }
+  };
+
   useEffect(() => {
     dispatch(listOrders());
     dispatch(listTables());
@@ -104,7 +129,7 @@ export const TablesComponent = () => {
               {tables.map((table) => (
                 <StyledTableRow key={table.id}>
                   <StyledTableCell component="th" scope="row">
-                    {table.id}
+                    {table.tableNumber}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {rooms
@@ -116,48 +141,81 @@ export const TablesComponent = () => {
                   <StyledTableCell align="center">
                     {table.numberOfPersons}
                   </StyledTableCell>
-                  {orders ? (
-                    <StyledTableCell
-                      style={{ cursor: "pointer" }}
-                      align="center"
-                    >
-                      {table.isOccupied ? (
-                        <div>
-                          {orders
-                            .filter((order) => order.table == table.id)
-                            .map((filteredOrder) => (
-                              <LinkContainer
-                                key={filteredOrder.id}
-                                component="button"
-                                to={`/orders/order/${filteredOrder.id}`}
-                                onClick={() => {
-                                  console.log("Clicked");
-                                }}
-                              >
-                                <Button variant="contained">details</Button>
-                              </LinkContainer>
-                            ))}
-                        </div>
-                      ) : (
-                        <Button variant="contained" onClick={() => {}}>
-                          add order
-                        </Button>
-                      )}
-                    </StyledTableCell>
-                  ) : (
-                    <div></div>
-                  )}
+                  <StyledTableCell
+                    component="th"
+                    style={{ cursor: "pointer" }}
+                    align="center"
+                  >
+                    <ClearIcon sx={{ color: "red" }} />
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
 
             <TableBody>
               <TableCell rowSpan={1} colSpan={4}>
-                <Button onClick={() => {}}>Add new table</Button>
+                {openNewTable ? (
+                  <Button
+                    onClick={() => {
+                      setOpenNewTable(!openNewTable);
+                    }}
+                  >
+                    close
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setOpenNewTable(!openNewTable);
+                    }}
+                  >
+                    Add new table
+                  </Button>
+                )}
               </TableCell>
             </TableBody>
           </Table>
         </TableContainer>
+        {openNewTable ? (
+          <Box sx={{ marginTop: "10px" }}>
+            <FormControl sx={{ marginTop: "10px", minWidth: "200px" }}>
+              <InputLabel id="demo-simple-select-label">Room</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={room}
+                label="Room"
+                onChange={handleChange}
+              >
+                <MenuItem value="Lunch Bar">Lunch Bar</MenuItem>
+                <MenuItem value="Dinner Room">Dinner Room</MenuItem>
+                <MenuItem value="English Bar">English Bar</MenuItem>
+                <MenuItem value="Cucina Italiana">Cucina Italiana</MenuItem>
+                <MenuItem value="Main room">Main room</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl sx={{ marginTop: "10px" }}>
+              <InputLabel htmlFor="component-outlined">Persons</InputLabel>
+              <OutlinedInput
+                id="component-outlined"
+                defaultValue="Persons"
+                label="Dish-price"
+                onChange={(e) => {
+                  setNumberOfPersonsSet(e.target.value);
+                }}
+              />
+            </FormControl>
+            <Button
+              sx={{ marginTop: "10px", height: "56px" }}
+              onClick={() => {
+                submitHandler();
+              }}
+            >
+              Add
+            </Button>
+          </Box>
+        ) : (
+          <></>
+        )}
       </AccordionDetails>
     </Accordion>
   );

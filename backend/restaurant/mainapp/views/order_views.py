@@ -195,4 +195,11 @@ def getAllTables(request):
     tables = Table.objects.all()
     serializer = TableSerializer(tables, many=True)
     return Response(serializer.data)
-    
+
+
+@api_view(['POST'])
+def createTable(request):
+    data = request.data 
+    print(data)
+
+    return Response("Table created")
