@@ -1,13 +1,12 @@
 import * as React from "react";
 
 import { listTables, listRooms } from "../../actions/tablesActions";
-import { getUsers, getEmployees } from "../../actions/userActions";
 import { listOrders } from "../../actions/ordersActions";
-import { createNewTable } from "../../actions/tablesActions";
+import { createNewTable,removeTable } from "../../actions/tablesActions";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -145,8 +144,13 @@ export const TablesComponent = () => {
                     component="th"
                     style={{ cursor: "pointer" }}
                     align="center"
-                  >
-                    <ClearIcon sx={{ color: "red" }} />
+                  ><Button onClick={()=>{
+                    console.log("DUPA")
+                    removeTable()
+                  }}>
+                    <ClearIcon sx={{ color: "red" }}  />
+                   </Button>
+                   
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

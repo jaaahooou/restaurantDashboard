@@ -95,7 +95,7 @@ export const createNewTable =
                 },
             };
 
-            //const { data } = await axios.post("orders/create-new-table", config);
+            const { data } = await axios.post("orders/create-new-table", config);
         } catch (error) {
             dispatch({
                 type: CREATE_NEW_TABLE_FAIL,
@@ -104,3 +104,8 @@ export const createNewTable =
             });
         }
     };
+
+
+export const removeTable = () => (dispatch) => {
+    console.log("Remove teble")
+}

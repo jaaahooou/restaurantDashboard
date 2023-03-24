@@ -169,7 +169,7 @@ export default function Order() {
                     {filteredDish.qty > 1 ? (
                       <RemoveIcon
                         onClick={() => {
-                          dispatch(removeFromOrder(filteredDish, id));
+                          dispatch(removeFromOrder(filteredDish, id,orderDishes));
                         }}
                       />
                     ) : (

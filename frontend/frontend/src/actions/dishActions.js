@@ -8,7 +8,6 @@ import {
     ORDER_DISH_LIST_SUCCESS,
     ORDER_DISH_LIST_FAIL,
     ADD_DISH_TO_MENU,
-    ADD_DISH_TO_MENU_SUCCESS,
     ADD_DISH_TO_MENU_FAIL,
 } from "../constants/dishConstants";
 
