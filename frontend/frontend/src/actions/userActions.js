@@ -9,6 +9,8 @@ import {
   EMPLOYEE_LIST_REQUEST,
   EMPLOYEE_LIST_SUCCESS,
   EMPLOYEE_LIST_FAIL,
+  USER_CREATE_FAIL,
+  USER_CREATE,
 } from "../constants/userConstants";
 import axios from "axios";
 
@@ -49,6 +51,29 @@ export const login = (username, password) => async (dispatch) => {
     });
   }
 };
+
+export const createNewUser =
+  (name, email, position, password) => async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_CREATE,
+        payload: {
+          name: name,
+          email: email,
+          position: position,
+          password: password,
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_CREATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getUsers = () => async (dispatch) => {
   try {

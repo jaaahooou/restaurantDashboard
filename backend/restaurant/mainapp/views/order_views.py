@@ -212,3 +212,10 @@ def createTable(request):
     )
 
     return Response("Table created")
+
+
+@api_view(['DELETE'])
+def removeTable(request,pk):
+    tableToRemove = Table.objects.get(id=pk)
+    tableToRemove.delete()
+    return Response("Table removed")

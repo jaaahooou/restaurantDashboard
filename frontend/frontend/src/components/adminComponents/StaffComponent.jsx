@@ -1,12 +1,13 @@
 import * as React from "react";
 
-import { listTables, listRooms } from "../../actions/tablesActions";
-import { getUsers, getEmployees } from "../../actions/userActions";
-import { listOrders } from "../../actions/ordersActions";
+import {
+  getUsers,
+  getEmployees,
+  createNewUser,
+} from "../../actions/userActions";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -27,11 +28,15 @@ import "@fontsource/public-sans";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";
-import InputLabel from "@mui/material/InputLabel";
+
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+
 import Select from "@mui/material/Select";
 import { LinkContainer } from "react-router-bootstrap";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -56,12 +61,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export const StaffComponent = () => {
   const dispatch = useDispatch();
 
+  const [openNewPerson, setOpenNewPerson] = useState(false);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [position, setPosition] = useState("");
+  const [password, setPassword] = useState("");
+
   const employeeList = useSelector((state) => state.employeeList);
   const { error, loading, employees } = employeeList;
 
   useEffect(() => {
     dispatch(getEmployees());
   }, []);
+
+  const addHandler = () => {
+    console.log(name);
+    console.log(email);
+    console.log(position);
+    console.log(password);
+  };
 
   return loading ? (
     <CircularProgress color="secondary" />
@@ -116,16 +135,98 @@ export const StaffComponent = () => {
                   ))}
                 </>
               ) : (
-                <CircularProgress color="secondary" />
+                <>{/* <CircularProgress color="secondary" /> */}</>
               )}
             </TableBody>
             <TableBody>
               <TableCell rowSpan={1} colSpan={4}>
-                <Button onClick={() => {}}>Add new person</Button>
+                {openNewPerson ? (
+                  <Button
+                    onClick={() => {
+                      setOpenNewPerson(!openNewPerson);
+                    }}
+                  >
+                    close
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setOpenNewPerson(!openNewPerson);
+                    }}
+                  >
+                    Add new person
+                  </Button>
+                )}
               </TableCell>
             </TableBody>
           </Table>
         </TableContainer>
+        {openNewPerson ? (
+          <Box
+            component="form"
+            sx={{
+              "& .MuiTextField-root": { m: 1, width: "25ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <div>
+              <TextField
+                required
+                id="outlined-name"
+                label="Name"
+                defaultValue="Name"
+                autoComplete="current-name"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              />
+              <TextField
+                required
+                id="outlined-email"
+                label="email"
+                defaultValue="Email"
+                autoComplete="current-Email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+              <TextField
+                required
+                id="outlined-position"
+                label="Position"
+                defaultValue="Position"
+                autoComplete="current-Position"
+                onChange={(e) => {
+                  setPosition(e.target.value);
+                }}
+              />
+
+              <TextField
+                required
+                id="outlined-password-input"
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </div>
+
+            <Button
+              sx={{ marginTop: "10px", height: "56px" }}
+              onClick={() => {
+                dispatch(createNewUser(name, email, position, password));
+                addHandler();
+              }}
+            >
+              Add
+            </Button>
+          </Box>
+        ) : (
+          <></>
+        )}
       </AccordionDetails>
     </Accordion>
   );

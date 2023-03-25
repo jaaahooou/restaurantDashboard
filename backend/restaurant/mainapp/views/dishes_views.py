@@ -1,5 +1,5 @@
 
-from mainapp.models import DishCategory, Dish, Order, OrderDish
+from mainapp.models import DishCategory, Dish, Order, OrderDish,Table
 from mainapp.serializers import  DishCategorySerializer, DishSerializer,OrderDishSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
@@ -86,12 +86,7 @@ def addDishToMenu(request):
         return Response(serializer.data)
 
 # delete dish from menu
-@api_view(['DELETE'])
-#@permission_classes([IsAdminUser])
-def deleteDishFromMenu(request, pk):
-    dishToRemove = Dish.objects.get(id=pk)
-    dishToRemove.delete()
-    return Response("Dish removed")
+
 
 
 # get ordered dishes
@@ -119,7 +114,11 @@ def getOrderedDishById(request,pk):
         })
 
 
-
+@api_view(['DELETE'])
+def deleteDish(request,pk):
+    dishToDelete = Dish.objects.get(id=pk)
+    dishToDelete.delete()
+    return Response("Dish removed")
 
 
         

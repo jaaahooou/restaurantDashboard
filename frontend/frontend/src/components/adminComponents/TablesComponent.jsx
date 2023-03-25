@@ -2,11 +2,10 @@ import * as React from "react";
 
 import { listTables, listRooms } from "../../actions/tablesActions";
 import { listOrders } from "../../actions/ordersActions";
-import { createNewTable,removeTable } from "../../actions/tablesActions";
+import { createNewTable, removeTable } from "../../actions/tablesActions";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -124,38 +123,43 @@ export const TablesComponent = () => {
               </TableRow>
             </TableHead>
 
-        {tables ? (    <TableBody>
-              {tables.map((table) => (
-                <StyledTableRow key={table.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {table.tableNumber}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {rooms
-                      .filter((room) => room.id == table.room)
-                      .map((filteredRoom) => (
-                        <div key={filteredRoom.id}> {filteredRoom.name}</div>
-                      ))}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {table.numberOfPersons}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    component="th"
-                    style={{ cursor: "pointer" }}
-                    align="center"
-                  ><Button onClick={()=>{
-                    console.log("DUPA")
-                    removeTable()
-                  }}>
-                    <ClearIcon sx={{ color: "red" }}  />
-                   </Button>
-                   
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>): (<></>)}
-        
+            {tables ? (
+              <TableBody>
+                {tables.map((table) => (
+                  <StyledTableRow key={table.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {table.tableNumber}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {rooms
+                        .filter((room) => room.id == table.room)
+                        .map((filteredRoom) => (
+                          <div key={filteredRoom.id}> {filteredRoom.name}</div>
+                        ))}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {table.numberOfPersons}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      component="th"
+                      style={{ cursor: "pointer" }}
+                      align="center"
+                    >
+                      <Button
+                        onClick={() => {
+                          console.log("DUPA");
+                          dispatch(removeTable(table, rooms, tables));
+                        }}
+                      >
+                        <ClearIcon sx={{ color: "red" }} />
+                      </Button>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            ) : (
+              <></>
+            )}
 
             <TableBody>
               <TableCell rowSpan={1} colSpan={4}>

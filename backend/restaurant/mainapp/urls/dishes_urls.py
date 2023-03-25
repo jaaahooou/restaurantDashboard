@@ -8,10 +8,8 @@ urlpatterns = [
     path('add-dish', views.addDishToMenu, name='add-dish'),
     path('get-dishes', views.getAllDishes, name='get-dishes'),
     path('get-order-dishes', views.getOrderDish, name='get-order-dishes'),
-   
-   
-    
-    path('remove-dish/<str:pk>', views.deleteDishFromMenu, name='remove-dish'),
+      
     path('delete-category/<str:pk>', views.deleteDishCategory, name='delete-category'),
-    path('get-order-dish/<str:pk>', views.getOrderedDishById, name='get-order-dish')
+    path('get-order-dish/<str:pk>', views.getOrderedDishById, name='get-order-dish'),
+    path('delete-dish/<str:pk>', views.deleteDish, name='delete-dish'),
 ]

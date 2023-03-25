@@ -57,8 +57,6 @@ const MenuSidebar = () => {
     window.location.reload();
   };
 
-  console.log(userInfo);
-
   return loading ? (
     <div>Loading</div>
   ) : error ? (

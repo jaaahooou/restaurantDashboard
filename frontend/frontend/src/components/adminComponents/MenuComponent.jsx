@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { listDishes } from "../../actions/dishActions";
 import { listCategories } from "../../actions/categoriesActions";
-import { addDishToMenu } from "../../actions/dishActions";
+import { addDishToMenu, removeDishFromMenu } from "../../actions/dishActions";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,11 +71,20 @@ export const MenuComponent = () => {
     dispatch(listCategories());
   }, []);
 
-  const submitHandler = (category,categoryId) => {
+  const submitHandler = (category, categoryId) => {
     try {
       dishPrice = Number(dishPrice);
       if (dishPrice > 0) {
-        dispatch(addDishToMenu(category,categoryId, dishName, dishPrice,dishes,categories));
+        dispatch(
+          addDishToMenu(
+            category,
+            categoryId,
+            dishName,
+            dishPrice,
+            dishes,
+            categories
+          )
+        );
       } else if (dishPrice < 0) {
         alert("Dish price must be greater then zero");
       } else {
@@ -125,31 +134,51 @@ export const MenuComponent = () => {
                             <StyledTableCell align="right">
                               Price
                             </StyledTableCell>
+                            <StyledTableCell align="right">
+                              Remove
+                            </StyledTableCell>
                           </TableRow>
                         </TableHead>
-                        {dishes? (     <TableBody>
-                          {dishes
-                            .filter((dish) => dish.category === category.id)
-                            .map((filtereDish) => (
-                              <TableRow
-                                key={filtereDish.id}
-                                sx={{
-                                  "&:last-child td, &:last-child th": {
-                                    border: 0,
-                                  },
-                                }}
-                              >
-                                <TableCell component="th" scope="row">
-                                  {filtereDish.title}
-                                </TableCell>
+                        {dishes ? (
+                          <TableBody>
+                            {dishes
+                              .filter((dish) => dish.category === category.id)
+                              .map((filtereDish) => (
+                                <TableRow
+                                  key={filtereDish.id}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                  }}
+                                >
+                                  <TableCell component="th" scope="row">
+                                    {filtereDish.title}
+                                  </TableCell>
 
-                                <TableCell align="right">
-                                  {filtereDish.price}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                        </TableBody>):(<></>)}
-                   
+                                  <TableCell align="right">
+                                    {filtereDish.price}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      onClick={() => {
+                                        dispatch(
+                                          removeDishFromMenu(
+                                            dishes,
+                                            filtereDish
+                                          )
+                                        );
+                                      }}
+                                    >
+                                      <ClearIcon sx={{ color: "red" }} />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </TableBody>
+                        ) : (
+                          <></>
+                        )}
 
                         <TableBody>
                           <TableCell rowSpan={1} colSpan={4}>
@@ -207,7 +236,7 @@ export const MenuComponent = () => {
                         <Button
                           sx={{ marginTop: "10px", height: "56px" }}
                           onClick={() => {
-                            submitHandler(category.title,category.id);
+                            submitHandler(category.title, category.id);
                           }}
                         >
                           Add
