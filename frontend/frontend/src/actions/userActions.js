@@ -58,12 +58,27 @@ export const createNewUser =
       dispatch({
         type: USER_CREATE,
         payload: {
+          name,
+          email,
+          position,
+          password,
+        },
+      });
+
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: {
           name: name,
           email: email,
           position: position,
           password: password,
         },
-      });
+      };
+
+      const { data } = await axios.post("/user/create/", config);
+      window.location.reload();
     } catch (error) {
       dispatch({
         type: USER_CREATE_FAIL,

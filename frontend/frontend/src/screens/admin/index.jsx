@@ -9,32 +9,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
+
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+
 import { Box } from "@mui/system";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import "@fontsource/public-sans";
-import Button from "@mui/material/Button";
-import ClearIcon from "@mui/icons-material/Clear";
-import AddIcon from "@mui/icons-material/Add";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { LinkContainer } from "react-router-bootstrap";
+
 import { TablesComponent } from "../../components/adminComponents/TablesComponent";
 import { StaffComponent } from "../../components/adminComponents/StaffComponent";
 import { MenuComponent } from "../../components/adminComponents/MenuComponent";
+import { LoginMessageComponent } from "../../components/LoginMessageComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -90,7 +77,11 @@ export default function Admin() {
   } = employeeList;
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
 
   const [roomName, setroomName] = React.useState("");
   const handleChange = (event) => {
@@ -111,9 +102,15 @@ export default function Admin() {
     <div>Something went wrong</div>
   ) : (
     <Box sx={{ margin: "20px" }}>
-      <StaffComponent />
-      <TablesComponent />
-      <MenuComponent />
+      {userLogin.userInfo.id ? (
+        <>
+          <StaffComponent />
+          <TablesComponent />
+          <MenuComponent />
+        </>
+      ) : (
+        <LoginMessageComponent />
+      )}
     </Box>
   );
 }

@@ -66,6 +66,13 @@ export const MenuComponent = () => {
 
   const [openNewDish, setOpenNewDish] = useState(false);
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
+
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listCategories());
@@ -160,18 +167,28 @@ export const MenuComponent = () => {
                                     {filtereDish.price}
                                   </TableCell>
                                   <TableCell align="right">
-                                    <Button
-                                      onClick={() => {
-                                        dispatch(
-                                          removeDishFromMenu(
-                                            dishes,
-                                            filtereDish
-                                          )
-                                        );
-                                      }}
-                                    >
-                                      <ClearIcon sx={{ color: "red" }} />
-                                    </Button>
+                                    {userLogin.userInfo.isAdmin ? (
+                                      <Button
+                                        onClick={() => {
+                                          dispatch(
+                                            removeDishFromMenu(
+                                              dishes,
+                                              filtereDish
+                                            )
+                                          );
+                                        }}
+                                      >
+                                        <ClearIcon sx={{ color: "red" }} />
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        onClick={() => {
+                                          alert("You must be loggad as admin");
+                                        }}
+                                      >
+                                        <ClearIcon sx={{ color: "black" }} />
+                                      </Button>
+                                    )}
                                   </TableCell>
                                 </TableRow>
                               ))}

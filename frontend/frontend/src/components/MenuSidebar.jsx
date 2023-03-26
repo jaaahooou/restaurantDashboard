@@ -17,13 +17,12 @@ import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 
 import { useSelector } from "react-redux";
 
 import { logout } from "../actions/userActions";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const darkTheme = createTheme({
   palette: {
@@ -95,7 +94,6 @@ const MenuSidebar = () => {
               />
             </Stack>
 
-            {/* <Item title="Dashboard" icon={<DashboardIcon />} to="/dashboard" /> */}
             <Item title="Menu" icon={<RestaurantMenuIcon />} to="/dishmenu" />
             <Item title="Tables" icon={<TableRestaurantIcon />} to="/tables" />
             <Item

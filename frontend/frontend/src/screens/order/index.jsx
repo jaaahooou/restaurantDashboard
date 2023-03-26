@@ -13,6 +13,7 @@ import {
   increaseDishQty,
 } from "../../actions/ordersActions";
 import { listCategories } from "../../actions/categoriesActions";
+import { LoginMessageComponent } from "../../components/LoginMessageComponent";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -64,6 +65,13 @@ export default function Order() {
   const categoriesList = useSelector((state) => state.categoriesList);
   const { categoriesError, categoriesLoading, categories } = categoriesList;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
+
   const [isPaid, setIsPaid] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -81,7 +89,6 @@ export default function Order() {
     const config = {
       headers: {
         "Content-type": "application/json",
-        //Authorization: "Bearer " + String(authTokens.access),
       },
       body: {
         isPaid: true,
@@ -103,212 +110,225 @@ export default function Order() {
     <div>Something went wrong</div>
   ) : (
     <Box sx={{ margin: "20px" }}>
-      {" "}
-      <Box>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={{ xs: 1, sm: 2, md: 4 }}
-          sx={{ marginBottom: "10px" }}
-        >
-          <Item>Payment method :{orderDetails.order.paymentMethod}</Item>
-          <Item
-            onClick={() => {
-              setOrderAsPaid(id);
-            }}
-          >
-            {isPaid ? "Is paid" : "Set as paid"}
-          </Item>
-          <Item>{orderDetails.order.isPaid ? "is paid" : "not paid"}</Item>
-        </Stack>
-      </Box>
-      <TableContainer component={Paper}>
-        <Table aria-label="spanning table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" colSpan={3}>
-                Details
-              </TableCell>
-              <TableCell align="right">Price</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Dish</TableCell>
-              <TableCell align="right">Qty.</TableCell>
-              <TableCell align="right">Unit price</TableCell>
+      {userLogin.userInfo.id ? (
+        <>
+          <Box>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={{ xs: 1, sm: 2, md: 4 }}
+              sx={{ marginBottom: "10px" }}
+            >
+              <Item>Payment method :{orderDetails.order.paymentMethod}</Item>
+              <Item
+                onClick={() => {
+                  setOrderAsPaid(id);
+                }}
+              >
+                {isPaid ? "Is paid" : "Set as paid"}
+              </Item>
+              <Item>{orderDetails.order.isPaid ? "is paid" : "not paid"}</Item>
+            </Stack>
+          </Box>
+          <TableContainer component={Paper}>
+            <Table aria-label="spanning table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" colSpan={3}>
+                    Details
+                  </TableCell>
+                  <TableCell align="right">Price</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Dish</TableCell>
+                  <TableCell align="right">Qty.</TableCell>
+                  <TableCell align="right">Unit price</TableCell>
 
-              <TableCell align="right">Sum</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orderDishes.map((filteredDish) => (
-              <TableRow key={filteredDish.id}>
-                <TableCell>
-                  {dishList.dishes
-                    .filter(
-                      (dishToDisplay) => dishToDisplay.id == filteredDish.dish
-                    )
-                    .map((filteredDishToDisplay) => (
-                      <div key={filteredDishToDisplay.id}>
-                        {filteredDishToDisplay.title}
-                      </div>
-                    ))}
-                </TableCell>
+                  <TableCell align="right">Sum</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orderDishes.map((filteredDish) => (
+                  <TableRow key={filteredDish.id}>
+                    <TableCell>
+                      {dishList.dishes
+                        .filter(
+                          (dishToDisplay) =>
+                            dishToDisplay.id == filteredDish.dish
+                        )
+                        .map((filteredDishToDisplay) => (
+                          <div key={filteredDishToDisplay.id}>
+                            {filteredDishToDisplay.title}
+                          </div>
+                        ))}
+                    </TableCell>
 
-                <TableCell align="right">
-                  <IconButton
-                    aria-label="add"
-                    onClick={() => {
-                      dispatch(increaseDishQty(filteredDish, id));
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  {filteredDish.qty}
-
-                  <IconButton aria-label="delete">
-                    {" "}
-                    {filteredDish.qty > 1 ? (
-                      <RemoveIcon
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="add"
                         onClick={() => {
-                          dispatch(removeFromOrder(filteredDish, id,orderDishes));
+                          dispatch(increaseDishQty(filteredDish, id));
                         }}
-                      />
-                    ) : (
-                      <DeleteOutlineIcon
-                        onClick={() => {
-                          dispatch(deleteFromOrder(filteredDish, id));
-                          dispatch(listOrderDishes(id));
-                        }}
-                      />
-                    )}
-                  </IconButton>
-                </TableCell>
-                <TableCell align="right">
-                  {" "}
-                  {dishList.dishes
-                    .filter(
-                      (dishToDisplay) => dishToDisplay.id == filteredDish.dish
-                    )
-                    .map((filteredDishToDisplay) => (
-                      <div key={filteredDishToDisplay.id}>
-                        {filteredDishToDisplay.price}
-                      </div>
-                    ))}
-                </TableCell>
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      {filteredDish.qty}
 
-                <TableCell align="right">
-                  {dishList.dishes
-                    .filter(
-                      (dishToDisplay) => dishToDisplay.id == filteredDish.dish
-                    )
-                    .map((filteredDishToDisplay) => (
-                      <div key={filteredDishToDisplay.id}>
-                        {(
-                          filteredDishToDisplay.price * filteredDish.qty
-                        ).toFixed(2)}
-                      </div>
-                    ))}
-                </TableCell>
-              </TableRow>
-            ))}
+                      <IconButton aria-label="delete">
+                        {" "}
+                        {filteredDish.qty > 1 ? (
+                          <RemoveIcon
+                            onClick={() => {
+                              dispatch(
+                                removeFromOrder(filteredDish, id, orderDishes)
+                              );
+                            }}
+                          />
+                        ) : (
+                          <DeleteOutlineIcon
+                            onClick={() => {
+                              dispatch(deleteFromOrder(filteredDish, id));
+                              dispatch(listOrderDishes(id));
+                            }}
+                          />
+                        )}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="right">
+                      {" "}
+                      {dishList.dishes
+                        .filter(
+                          (dishToDisplay) =>
+                            dishToDisplay.id == filteredDish.dish
+                        )
+                        .map((filteredDishToDisplay) => (
+                          <div key={filteredDishToDisplay.id}>
+                            {filteredDishToDisplay.price}
+                          </div>
+                        ))}
+                    </TableCell>
 
-            <TableRow>
-              <TableCell rowSpan={1} colSpan={4}>
-                <Button
-                  onClick={() => {
-                    openAndCloseMenu();
-                  }}
-                >
-                  {openMenu ? "Close menu" : "Add new dish"}
-                </Button>
-              </TableCell>
-            </TableRow>
+                    <TableCell align="right">
+                      {dishList.dishes
+                        .filter(
+                          (dishToDisplay) =>
+                            dishToDisplay.id == filteredDish.dish
+                        )
+                        .map((filteredDishToDisplay) => (
+                          <div key={filteredDishToDisplay.id}>
+                            {(
+                              filteredDishToDisplay.price * filteredDish.qty
+                            ).toFixed(2)}
+                          </div>
+                        ))}
+                    </TableCell>
+                  </TableRow>
+                ))}
 
-            <TableRow>
-              <TableCell rowSpan={3} />
+                <TableRow>
+                  <TableCell rowSpan={1} colSpan={4}>
+                    <Button
+                      onClick={() => {
+                        openAndCloseMenu();
+                      }}
+                    >
+                      {openMenu ? "Close menu" : "Add new dish"}
+                    </Button>
+                  </TableCell>
+                </TableRow>
 
-              <TableCell colSpan={1}>Total</TableCell>
-              <TableCell>
-                <Button
-                  onClick={() => {
-                    dispatch(getOrderDetails(id));
-                    dispatch(listOrderDishes(id));
-                  }}
-                >
-                  recalculate
-                </Button>
-              </TableCell>
+                <TableRow>
+                  <TableCell rowSpan={3} />
 
-              <TableCell align="right">
-                {orderDetails.order.totalPrice}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* This menu opens after the user clicks on the "add new dish" button */}
-      {openMenu ? (
-        <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 1, sm: 8, md: 12 }}
-          >
-            {categories.map((category) => (
-              <Grid item xs={1} sm={4} md={4} key={category.id}>
-                <Item>
-                  <Typography variant="h4" align="left">
-                    {category.title}
-                  </Typography>
+                  <TableCell colSpan={1}>Total</TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => {
+                        dispatch(getOrderDetails(id));
+                        dispatch(listOrderDishes(id));
+                      }}
+                    >
+                      recalculate
+                    </Button>
+                  </TableCell>
 
-                  <TableContainer component={Paper}>
-                    <Table sx={{ maxWidth: "100%" }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell align="right">Price</TableCell>
-                          <TableCell align="right"></TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {dishes
-                          .filter((dish) => dish.category === category.id)
-                          .map((filtereDish) => (
-                            <TableRow
-                              key={filtereDish.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell component="th" scope="row">
-                                {filtereDish.title}
-                              </TableCell>
+                  <TableCell align="right">
+                    {orderDetails.order.totalPrice}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* This menu opens after the user clicks on the "add new dish" button */}
+          {openMenu ? (
+            <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 1, sm: 8, md: 12 }}
+              >
+                {categories.map((category) => (
+                  <Grid item xs={1} sm={4} md={4} key={category.id}>
+                    <Item>
+                      <Typography variant="h4" align="left">
+                        {category.title}
+                      </Typography>
 
-                              <TableCell align="right">
-                                {filtereDish.price}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Button
-                                  onClick={() => {
-                                    dispatch(addToOrder(filtereDish, id));
+                      <TableContainer component={Paper}>
+                        <Table
+                          sx={{ maxWidth: "100%" }}
+                          aria-label="simple table"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Name</TableCell>
+                              <TableCell align="right">Price</TableCell>
+                              <TableCell align="right"></TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {dishes
+                              .filter((dish) => dish.category === category.id)
+                              .map((filtereDish) => (
+                                <TableRow
+                                  key={filtereDish.id}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
                                   }}
                                 >
-                                  <AddIcon />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Item>
+                                  <TableCell component="th" scope="row">
+                                    {filtereDish.title}
+                                  </TableCell>
+
+                                  <TableCell align="right">
+                                    {filtereDish.price}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Button
+                                      onClick={() => {
+                                        dispatch(addToOrder(filtereDish, id));
+                                      }}
+                                    >
+                                      <AddIcon />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Item>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-        </Box>
+            </Box>
+          ) : (
+            <></>
+          )}
+        </>
       ) : (
-        <></>
+        <LoginMessageComponent />
       )}
     </Box>
   );

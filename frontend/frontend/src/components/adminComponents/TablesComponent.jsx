@@ -74,6 +74,13 @@ export const TablesComponent = () => {
   let [numberOfPersonsSet, setNumberOfPersonsSet] = useState("");
   const [room, setRoom] = useState("");
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
+
   const handleChange = (event) => {
     setRoom(event.target.value);
   };
@@ -145,14 +152,23 @@ export const TablesComponent = () => {
                       style={{ cursor: "pointer" }}
                       align="center"
                     >
-                      <Button
-                        onClick={() => {
-                          console.log("DUPA");
-                          dispatch(removeTable(table, rooms, tables));
-                        }}
-                      >
-                        <ClearIcon sx={{ color: "red" }} />
-                      </Button>
+                      {userLogin.userInfo.isAdmin ? (
+                        <Button
+                          onClick={() => {
+                            dispatch(removeTable(table, rooms, tables));
+                          }}
+                        >
+                          <ClearIcon sx={{ color: "red" }} />
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            alert("You must be logged as admin");
+                          }}
+                        >
+                          <ClearIcon sx={{ color: "black" }} />
+                        </Button>
+                      )}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

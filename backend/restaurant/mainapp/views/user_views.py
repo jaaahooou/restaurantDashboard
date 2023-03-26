@@ -60,14 +60,24 @@ def get_employees(request):
 
 @api_view(['POST'])
 def createUser(request):
+    print("Creating")
 
     try:
         data = request.data 
+        print(data)
         user = User.objects.create(
-            first_name = data['name'],
-            username = data['email'],
-            email=data['email'],
-            password = make_password(data['password']),
+            first_name = data['body']['name'],
+            username = data['body']['email'],
+            email=data['body']['email'],
+            password = make_password(data['body']['password']),
+        )
+
+        employee = Employee.objects.create(
+            user = user,
+            isActive=False,
+            position = data['body']['position'],
+            name = data['body']['name']
+
         )
 
         serializer = UserSerializer(user, many=False)

@@ -62,6 +62,12 @@ export const StaffComponent = () => {
 
   const employeeList = useSelector((state) => state.employeeList);
   const { error, loading, employees } = employeeList;
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
 
   useEffect(() => {
     dispatch(getEmployees());
@@ -121,13 +127,17 @@ export const StaffComponent = () => {
                         style={{ cursor: "pointer" }}
                         align="center"
                       >
-                        <ClearIcon sx={{ color: "red" }} />
+                        {userLogin.userInfo.isAdmin ? (
+                          <ClearIcon sx={{ color: "red" }} />
+                        ) : (
+                          <ClearIcon sx={{ color: "black" }} />
+                        )}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
                 </>
               ) : (
-                <>{/* <CircularProgress color="secondary" /> */}</>
+                <></>
               )}
             </TableBody>
             <TableBody>

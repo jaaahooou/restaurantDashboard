@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
 import { listDishes } from "../../actions/dishActions";
 import { listCategories } from "../../actions/categoriesActions";
+import { LoginMessageComponent } from "../../components/LoginMessageComponent";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -29,7 +30,17 @@ export default function ResponsiveGrid() {
   const dishList = useSelector((state) => state.dishList);
   const { error, loading, dishes } = dishList;
   const categoriesList = useSelector((state) => state.categoriesList);
-  const { categoriesError, categoriesLoading, categories } = categoriesList;
+  const {
+    error: categoriesError,
+    loading: categoriesLoading,
+    categories,
+  } = categoriesList;
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
   useEffect(() => {
     dispatch(listDishes());
     dispatch(listCategories());
@@ -41,52 +52,56 @@ export default function ResponsiveGrid() {
     <div>Something went wrong</div>
   ) : (
     <Box style={{ margin: "20px" }} sx={{ flexGrow: 1 }}>
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 1, sm: 8, md: 12 }}
-      >
-        {categories.map((category) => (
-          <Grid item xs={1} sm={4} md={4} key={category.id}>
-            <Item>
-              <Typography variant="h4" align="left">
-                {category.title}
-              </Typography>
+      {userLogin.userInfo.id ? (
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 1, sm: 8, md: 12 }}
+        >
+          {categories.map((category) => (
+            <Grid item xs={1} sm={4} md={4} key={category.id}>
+              <Item>
+                <Typography variant="h4" align="left">
+                  {category.title}
+                </Typography>
 
-              <TableContainer component={Paper}>
-                <Table sx={{ maxWidth: "100%" }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell align="right">Price</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {dishes
-                      .filter((dish) => dish.category === category.id)
-                      .map((filtereDish) => (
-                        <TableRow
-                          key={filtereDish.id}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {filtereDish.title}
-                          </TableCell>
+                <TableContainer component={Paper}>
+                  <Table sx={{ maxWidth: "100%" }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell align="right">Price</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {dishes
+                        .filter((dish) => dish.category === category.id)
+                        .map((filtereDish) => (
+                          <TableRow
+                            key={filtereDish.id}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {filtereDish.title}
+                            </TableCell>
 
-                          <TableCell align="right">
-                            {filtereDish.price}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Item>
-          </Grid>
-        ))}
-      </Grid>
+                            <TableCell align="right">
+                              {filtereDish.price}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Item>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <LoginMessageComponent />
+      )}
     </Box>
   );
 }

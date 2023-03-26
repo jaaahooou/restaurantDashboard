@@ -21,6 +21,7 @@ import TableRow from "@mui/material/TableRow";
 
 import Button from "@mui/material/Button";
 import { LinkContainer } from "react-router-bootstrap";
+import { LoginMessageComponent } from "../../components/LoginMessageComponent";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -65,6 +66,13 @@ export default function Tables() {
   const roomsList = useSelector((state) => state.roomsList);
   const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
+
   useEffect(() => {
     dispatch(listTables());
     dispatch(listRooms());
@@ -81,70 +89,77 @@ export default function Tables() {
     <div>Something went wrong</div>
   ) : (
     <div sx={{ maxwidth: 1024 }}>
-      <Box sx={{ margin: "20px" }}>
-        <TableContainer component={Paper}>
-          <Table aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Table no</StyledTableCell>
-                <StyledTableCell align="center">Room</StyledTableCell>
-                <StyledTableCell align="center"> Max Persons</StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
-              </TableRow>
-            </TableHead>
+      {userLogin.userInfo.id ? (
+        <Box sx={{ margin: "20px" }}>
+          <TableContainer component={Paper}>
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Table no</StyledTableCell>
+                  <StyledTableCell align="center">Room</StyledTableCell>
+                  <StyledTableCell align="center"> Max Persons</StyledTableCell>
+                  <StyledTableCell align="center"></StyledTableCell>
+                </TableRow>
+              </TableHead>
 
-            <TableBody>
-              {tables.map((table) => (
-                <StyledTableRow key={table.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {table.id}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {rooms
-                      .filter((room) => room.id == table.room)
-                      .map((filteredRoom) => (
-                        <div key={filteredRoom.id}>{filteredRoom.name}</div>
-                      ))}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {table.numberOfPersons}
-                  </StyledTableCell>
+              <TableBody>
+                {tables.map((table) => (
+                  <StyledTableRow key={table.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {table.id}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {rooms
+                        .filter((room) => room.id == table.room)
+                        .map((filteredRoom) => (
+                          <div key={filteredRoom.id}>{filteredRoom.name}</div>
+                        ))}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {table.numberOfPersons}
+                    </StyledTableCell>
 
-                  <StyledTableCell style={{ cursor: "pointer" }} align="center">
-                    {table.isOccupied ? (
-                      <div>
-                        {orders
-                          .filter((order) => order.table == table.id)
-                          .map((filteredOrder) => (
-                            <LinkContainer
-                              key={filteredOrder.id}
-                              component="button"
-                              to={`/orders/order/${filteredOrder.id}`}
-                              onClick={() => {
-                                console.log("Clicked");
-                              }}
-                            >
-                              <Button variant="contained">details</Button>
-                            </LinkContainer>
-                          ))}
-                      </div>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          addOrderHandler(table.id);
-                        }}
-                      >
-                        add order
-                      </Button>
-                    )}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+                    <StyledTableCell
+                      style={{ cursor: "pointer" }}
+                      align="center"
+                    >
+                      {table.isOccupied ? (
+                        <div>
+                          {orders
+                            .filter((order) => order.table == table.id)
+                            .map((filteredOrder) => (
+                              <LinkContainer
+                                key={filteredOrder.id}
+                                component="button"
+                                to={`/orders/order/${filteredOrder.id}`}
+                                onClick={() => {
+                                  console.log("Clicked");
+                                }}
+                              >
+                                <Button variant="contained">details</Button>
+                              </LinkContainer>
+                            ))}
+                        </div>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            addOrderHandler(table.id);
+                          }}
+                        >
+                          add order
+                        </Button>
+                      )}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      ) : (
+        <LoginMessageComponent />
+      )}
     </div>
   );
 }

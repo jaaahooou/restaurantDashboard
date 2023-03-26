@@ -21,6 +21,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "@fontsource/public-sans";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import { LoginMessageComponent } from "../../components/LoginMessageComponent";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,10 +51,6 @@ export default function Staff() {
 
   const userList = useSelector((state) => state.userList);
   const { error, loading, users } = userList;
-  //const { error, loading, users } = userList;
-
-  const roomsList = useSelector((state) => state.roomsList);
-  const { error: roomsListError, loading: roomsListLoading, rooms } = roomsList;
 
   const employeeList = useSelector((state) => state.employeeList);
   const {
@@ -63,7 +60,11 @@ export default function Staff() {
   } = employeeList;
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const {
+    error: userLoginError,
+    loading: userLoginLoading,
+    userInfo,
+  } = userLogin;
 
   useEffect(() => {
     dispatch(getEmployees());
@@ -79,45 +80,58 @@ export default function Staff() {
     <div>Something went wrong</div>
   ) : (
     <Box sx={{ margin: "20px" }}>
-      <TableContainer component={Paper}>
-        <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Waiter name</StyledTableCell>
-              <StyledTableCell align="center">Person id</StyledTableCell>
-              <StyledTableCell align="center">Position</StyledTableCell>
+      {userLogin.userInfo.id ? (
+        <>
+          {" "}
+          <TableContainer component={Paper}>
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Waiter name</StyledTableCell>
+                  <StyledTableCell align="center">Person id</StyledTableCell>
+                  <StyledTableCell align="center">Position</StyledTableCell>
 
-              <StyledTableCell align="center">In work</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          {employees ? (
-            <TableBody>
-              {employees.map((employee) => (
-                <StyledTableRow key={employee.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {employee.name}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {employee.id}
-                  </StyledTableCell>
-                  <StyledTableCell style={{ cursor: "pointer" }} align="center">
-                    {employee.position}
-                  </StyledTableCell>
-                  <StyledTableCell style={{ cursor: "pointer" }} align="center">
-                    {employee.isActive ? (
-                      <CheckIcon sx={{ color: "green" }} />
-                    ) : (
-                      <ClearIcon sx={{ color: "red" }} />
-                    )}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          ) : (
-            <CircularProgress color="secondary" />
-          )}
-        </Table>
-      </TableContainer>
+                  <StyledTableCell align="center">In work</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              {employees ? (
+                <TableBody>
+                  {employees.map((employee) => (
+                    <StyledTableRow key={employee.id}>
+                      <StyledTableCell component="th" scope="row">
+                        {employee.name}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {employee.id}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        style={{ cursor: "pointer" }}
+                        align="center"
+                      >
+                        {employee.position}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        style={{ cursor: "pointer" }}
+                        align="center"
+                      >
+                        {employee.isActive ? (
+                          <CheckIcon sx={{ color: "green" }} />
+                        ) : (
+                          <ClearIcon sx={{ color: "red" }} />
+                        )}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              ) : (
+                <CircularProgress color="secondary" />
+              )}
+            </Table>
+          </TableContainer>{" "}
+        </>
+      ) : (
+        <LoginMessageComponent />
+      )}
     </Box>
   );
 }

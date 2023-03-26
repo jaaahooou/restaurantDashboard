@@ -9,15 +9,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 
 import AdbIcon from "@mui/icons-material/Adb";
+import FastfoodIcon from "@mui/icons-material/Fastfood";
 import { useProSidebar } from "react-pro-sidebar";
 
-
-
 function ResponsiveAppBar() {
-
-
-  const { collapseSidebar, toggleSidebar, toggled, } =
-    useProSidebar();
+  const { collapseSidebar, toggleSidebar, toggled } = useProSidebar();
   const toggle = () => {
     toggleSidebar();
     if (toggled) {
@@ -34,7 +30,7 @@ function ResponsiveAppBar() {
       <AppBar position="static" sx={{ width: 1 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <FastfoodIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -50,7 +46,7 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              RESTAURANT
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -67,7 +63,7 @@ function ResponsiveAppBar() {
                 <MenuIcon />
               </IconButton>
             </Box>
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <FastfoodIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
@@ -84,7 +80,7 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              RESTAURANT
             </Typography>
           </Toolbar>
         </Container>
